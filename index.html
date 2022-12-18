@@ -4,8 +4,87 @@
       <meta charset="UTF-8" />
       <meta http-equiv="X-UA-Compatible" content="IE=edge" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+      <link
+         href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;800&display=swap"
+         rel="stylesheet"
+      />
       <link rel="stylesheet" href="/dist/output.css" />
-      <title>Food Manager</title>
+      <script src="https://kit.fontawesome.com/42d5adcbca.js"></script>
+      <title>Food Manager | Main</title>
    </head>
-   <body></body>
+   <body class="font-body">
+      <section
+         class="w-screen h-screen bg-gradient-to-br from-gradient_one to-gradient_two flex flex-col items-center"
+      >
+         <main
+            class="w-4/5 h-fit rounded-2xl overflow-hidden mt-16 background-white max-w-[640px]"
+         >
+            <div class="">
+               <div class="ml-auto mr-auto w-16 h-16 bg-main rounded-full mt-8">
+                  <img
+                     class="w-8 relative top-4 left-4 box-shadow"
+                     src="src/svg/home.svg"
+                     alt="home icon"
+                  />
+               </div>
+               <p class="text-center text-gray mt-2">
+                  Rumah Makan Padang Selero
+               </p>
+            </div>
+            <hr class="w-4/5 mx-auto mt-2 border-[0.1px] bg-gray border-gray" />
+            <div class="w-full flex flex-col items-center">
+               <form class="w-4/5" method="POST" action="">
+                  <h4 class="mr-auto font-medium text-gray_dark text-2xl pt-9">
+                     Sign In
+                  </h4>
+                  <p class="text-sm text-gray mt-2">
+                     Enter id and password to start
+                  </p>
+                  <label class="block mt-4 mb-2">
+                     <span
+                        class="after:content-['*'] after:ml-0.5 after:text-danger block text-sm font-medium text-gray"
+                     >
+                        Id
+                     </span>
+                     <input
+                        type="id"
+                        name="id"
+                        class="mt-1 px-3 py-2 text-gray bg-transparent border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-success block w-full rounded-md sm:text-sm focus:ring-1"
+                     />
+                  </label>
+                  <label class="block mb-8">
+                     <span
+                        class="after:content-['*'] after:ml-0.5 after:text-danger block text-sm font-medium text-gray"
+                     >
+                        password
+                     </span>
+                     <input
+                        type="password"
+                        name="password"
+                        class="mt-1 px-3 py-2 text-gray bg-transparent border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-success block w-full rounded-md sm:text-sm focus:ring-1"
+                     />
+                  </label>
+                  <button
+                     class="w-full rounded-lg bg-main px-2 py-4 font-medium text-white text-sm mb-12 active:bg-purple hover:opacity-80 custom-my-button transition-all duration-300"
+                  >
+                     <span
+                        >Sign In<img
+                           src="src/svg/door.svg"
+                           alt="door icon for login"
+                           class="w-4 ml-2 inline-block -translate-y-[2px]"
+                     /></span>
+                  </button>
+               </form>
+               <p class="text-xs text-gray pb-2">
+                  Copyright &copy; PT. Investama Jaya Properti
+               </p>
+            </div>
+         </main>
+      </section>
+   </body>
 </html>
+<!-- 48px icon-frame -->
+<!-- 24px icon size -->
+<!-- content margin top 8px -->

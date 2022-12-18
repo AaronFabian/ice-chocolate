@@ -4,7 +4,7 @@
    "description": "the food restaurant bussiness logic app",
    "main": "index.js",
    "scripts": {
-      "runtail": "tailwindcss -i ./src/input.css -o ./dist/output.css --watch"
+      "tail": "tailwindcss -i ./src/input.css -o ./dist/output.css --watch"
    },
    "author": "Aaron Fabian",
    "license": "ISC",

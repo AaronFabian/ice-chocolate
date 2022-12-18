@@ -1,3 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.background-mirror {
+   background: linear-gradient(
+      180deg,
+      hsla(0, 0%, 100%, 0.15),
+      hsla(0, 0%, 100%, 0%)
+   );
+}
+
+.background-white {
+   background: linear-gradient(0deg, #e5e5e5 0%, #fff 100%);
+}
+
+.box-shadow {
+   box-shadow: 0 0 2rem 0 rgba(136, 152, 170, 0.15);
+}
