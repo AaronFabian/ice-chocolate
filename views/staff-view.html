@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="stylesheet" href="../dist/output.css" />
+      <title>Document</title>
+      <style>
+         th {
+            text-align: left;
+            padding-right: 110px;
+         }
+
+         tbody {
+            display: block;
+            height: 30px;
+         }
+
+         tr {
+            display: block;
+         }
+
+         td {
+            display: inline;
+         }
+
+         .modal-input-menu {
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.75s;
+         }
+
+         .modal-input-menu.active {
+            opacity: 1;
+            visibility: visible;
+         }
+
+         .blurry-bg {
+            width: 100%;
+            height: 100vh;
+            background-image: linear-gradient(
+                  rgba(0, 0, 0, 0.63),
+                  rgba(0, 0, 0, 0.623)
+               ),
+               url(img/000333.jpg);
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            z-index: 10;
+         }
+
+         .wrapper-deco {
+            height: 6rem;
+            transition: 0.1s;
+         }
+
+         .wrapper-deco.active {
+            height: 21.2rem;
+         }
+
+         ::-webkit-scrollbar {
+            display: none;
+         }
+
+         .categories-container {
+            height: 2.6rem;
+            transition: 0.1s;
+         }
+
+         .categories-container.active {
+            height: fit-content;
+         }
+
+         .opening-animate {
+            animation: open 1.6s linear 2.4s forwards;
+         }
+
+         .logo-animate {
+            animation: logo-open 1s linear forwards;
+         }
+
+         .text-animate {
+            animation: text-welcome 0.5s linear 1.2s forwards;
+         }
+
+         .animate-success-adding {
+            animation: animate-success-adding 1.2s;
+         }
+
+         @keyframes animate-success-adding {
+            0% {
+               margin-top: 0;
+            }
+
+            50% {
+               margin-top: -10px;
+            }
+
+            100% {
+               margin-top: 0;
+            }
+         }
+
+         /* -translate-y-[2px] translate-x-[12px] */
+
+         @keyframes open {
+            0% {
+               clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+            }
+
+            100% {
+               clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0% 100%);
+               visibility: hidden;
+            }
+         }
+
+         @keyframes logo-open {
+            0% {
+               width: 192px;
+               height: 192px;
+               opacity: 0;
+            }
+
+            50% {
+               opacity: 100%;
+            }
+
+            100% {
+               width: 144px;
+               height: 144px;
+               opacity: 100%;
+            }
+         }
+
+         @keyframes text-welcome {
+            0% {
+               transform: translateY(-100%);
+            }
+
+            100% {
+               transform: translateY(0);
+            }
+         }
+         /* 192px */
+         /* 144 px */
+      </style>
+   </head>
+   <body>
+      <div
+         class="absolute top-0 left-0 z-[998] w-screen h-screen opening-animate bg-main"
+      >
+         <div
+            class="absolute z-[999] -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2"
+         >
+            <div
+               class="w-48 h-48 rounded-full opacity-0 bg-secondary drop-shadow-xl logo-animate"
+            >
+               <img
+                  class="relative w-2/3 -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
+                  src="../src/svg/eat.svg"
+                  alt="company logo"
+               />
+            </div>
+            <div class="overflow-hidden">
+               <p
+                  class="text-3xl font-medium text-center text-white -translate-y-full text-animate"
+               >
+                  Welcome
+               </p>
+            </div>
+         </div>
+      </div>
+
+      <main class="w-screen h-screen main-content">
+         <div class="w-full h-full overflow-hidden duration1000 bg-gray_dark">
+            <nav
+               class="relative w-4/5 px-2 pt-4 pb-8 mx-auto text-base translate-y-3 bg-white h-28 rounded-2xl"
+            >
+               <ul class="relative">
+                  <li class="font-semibold text-gray_dark">
+                     Name :
+                     <span class="font-medium text-main">Aaron Fabian</span>
+                  </li>
+                  <li class="font-medium text-gray_dark">
+                     <h3>
+                        Staff number :
+                        <span class="font-bold text-success">999</span>
+                     </h3>
+                  </li>
+                  <li class="font-medium text-gray_dark">
+                     <h3>
+                        Seat selected :
+                        <span class="font-bold text-warning" id="seatNumber"
+                           >-</span
+                        >
+                     </h3>
+                  </li>
+                  <li
+                     class="absolute top-0 rounded-full right-2 w-14 bg-success h-14"
+                  >
+                     <img
+                        src="/src/svg/user.svg"
+                        alt="staff icon"
+                        class="relative w-10 -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
+                     />
+                  </li>
+               </ul>
+            </nav>
+            <div class="relative overflow-visible duration-300 slide-container">
+               <section class="page-1">
+                  <form>
+                     <div
+                        class="w-4/5 h-48 pb-4 pl-2 mx-auto mt-8 bg-white rounded-2xl"
+                     >
+                        <fieldset>
+                           <label class="block">
+                              <span
+                                 class="block mt-4 text-lg font-medium text-gray_dark"
+                                 >Customer table number :
+                              </span>
+                              <input
+                                 class="py-2 px-[2px] text-2xl border-2 border-main placeholder-slate-400 contrast-more:border-slate-400 contrast-more:placeholder-slate-500"
+                                 id="inpTable"
+                              />
+                           </label>
+
+                           <input
+                              id="new-seat"
+                              class="peer/draft"
+                              type="radio"
+                              name="status"
+                           />
+                           <label
+                              for="new-seat"
+                              class="peer-checked/draft:text-main"
+                              >New table</label
+                           >
+
+                           <input
+                              id="Addition"
+                              class="peer/published"
+                              type="radio"
+                              name="status"
+                              checked
+                           />
+                           <label
+                              for="Addition"
+                              class="peer-checked/published:text-main"
+                              >Addition</label
+                           >
+
+                           <div
+                              class="hidden text-orange peer-checked/draft:block"
+                           >
+                              New Customer Seat
+                           </div>
+                           <div
+                              class="hidden peer-checked/published:block text-orange"
+                           >
+                              <strong>warning</strong> : <br />input table
+                              number before next slide.
+                           </div>
+                        </fieldset>
+                     </div>
+                  </form>
+                  <section>
+                     <div
+                        class="grid grid-cols-3 grid-rows-4 gap-1 px-8 mt-8 text-5xl font-semibold keypad-grid text-gray_dark group hover:cursor-pointer"
+                     >
+                        <div
+                           class="flex items-center justify-center w-full h-16 duration-75 bg-warning rounded-tl-2xl active:text-pink hover:text-white active:translate-y-1"
+                        >
+                           7
+                        </div>
+                        <div
+                           class="flex items-center justify-center w-full h-16 duration-75 bg-warning active:text-pink hover:text-white active:translate-y-1"
+                        >
+                           8
+                        </div>
+                        <div
+                           class="flex items-center justify-center w-full h-16 duration-75 bg-warning rounded-tr-2xl active:text-pink hover:text-white active:translate-y-1"
+                        >
+                           9
+                        </div>
+                        <div
+                           class="flex items-center justify-center w-full h-16 duration-75 bg-warning active:text-pink hover:text-white active:translate-y-1"
+                        >
+                           4
+                        </div>
+                        <div
+                           class="flex items-center justify-center w-full h-16 duration-75 bg-warning active:text-pink hover:text-white active:translate-y-1"
+                        >
+                           5
+                        </div>
+                        <div
+                           class="flex items-center justify-center w-full h-16 duration-75 bg-warning active:text-pink hover:text-white active:translate-y-1"
+                        >
+                           6
+                        </div>
+                        <div
+                           class="flex items-center justify-center w-full h-16 duration-75 bg-warning active:text-pink hover:text-white active:translate-y-1"
+                        >
+                           1
+                        </div>
+                        <div
+                           class="flex items-center justify-center w-full h-16 duration-75 bg-warning active:text-pink hover:text-white active:translate-y-1"
+                        >
+                           2
+                        </div>
+                        <div
+                           class="flex items-center justify-center w-full h-16 duration-75 bg-warning active:text-pink hover:text-white active:translate-y-1"
+                        >
+                           3
+                        </div>
+                        <div
+                           class="flex items-center justify-center w-full h-16 duration-75 bg-danger rounded-bl-2xl active:text-pink hover:text-white active:translate-y-1"
+                        >
+                           del
+                        </div>
+                        <button
+                           id="nextBtn"
+                           class="flex items-center justify-center w-full h-16 col-span-2 text-center duration-75 bg-main rounded-br-2xl active:text-pink hover:text-white active:translate-y-1"
+                        >
+                           Next
+                        </button>
+                     </div>
+                  </section>
+               </section>
+               <section class="absolute top-0 right-0 translate-x-full page-2">
+                  <div class="w-screen h-fit">
+                     <div
+                        class="w-4/5 h-24 px-2 pt-2 m-auto bg-white rounded-2xl"
+                     >
+                        <label
+                           class="block mb-2 text-lg font-medium tracking-wide text-gray-700"
+                           for="inpOptions"
+                        >
+                           Options
+                        </label>
+                        <div class="relative">
+                           <select
+                              class="block w-full px-4 py-2 pr-8 leading-tight bg-gray-200 border border-gray-200 rounded appearance-none text-gray_dark focus:outline-main focus:bg-white focus:border-gray-500"
+                              id="inpOptions"
+                           >
+                              <option selected value="menu">Menu</option>
+                              <option value="delete">Delete</option>
+                              <option value="tableCheck">Table Check</option>
+                              <option value="payment">Payment</option>
+                              <option value="restart">restart</option>
+                           </select>
+                           <div
+                              class="absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 pointer-events-none"
+                           >
+                              <svg
+                                 class="w-4 h-4 fill-current"
+                                 xmlns="http://www.w3.org/2000/svg"
+                                 viewBox="0 0 20 20"
+                              >
+                                 <path
+                                    d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"
+                                 />
+                              </svg>
+                           </div>
+                        </div>
+                     </div>
+                     <div
+                        class="w-4/5 m-auto mt-4 bg-white h-[23rem] rounded-2xl relative option-screen"
+                     >
+                        <div
+                           class="absolute top-0 z-20 w-11/12 mx-auto -translate-x-1/2 translate-y-4 left-1/2 bg-main rounded-2xl wrapper-deco"
+                        >
+                           <!-- 6rem -->
+                           <!-- 21.2rem -->
+                           <p
+                              class="pt-2 text-2xl font-medium text-center duration-75 categories text-gray_dark select-menu active:text-white hover:opacity-80"
+                           >
+                              Select Menu
+                           </p>
+                           <hr class="w-4/5 mx-auto" />
+
+                           <div
+                              class="my-2 overflow-auto text-2xl font-medium text-center text-white categories-container group hover:opacity-80"
+                           >
+                              <!-- 2.6rem -->
+                              <p
+                                 class="w-4/5 m-auto menu-item active:text-orange hover:cursor-pointer hover:opacity-80"
+                                 data-menu="Japanese food"
+                              >
+                                 Japanese food
+                              </p>
+                              <p
+                                 class="w-4/5 py-2 m-auto menu-item active:text-orange hover:cursor-pointer hover:opacity-80"
+                                 data-menu="Chinese food"
+                              >
+                                 Chinese food
+                              </p>
+                              <p
+                                 class="w-4/5 py-2 m-auto menu-item active:text-orange hover:cursor-pointer hover:opacity-80"
+                                 data-menu="Appetizer"
+                              >
+                                 Appetizer
+                              </p>
+                              <p
+                                 class="w-4/5 py-2 m-auto menu-item active:text-orange hover:cursor-pointer hover:opacity-80"
+                                 data-menu="Beverage"
+                              >
+                                 Beverage
+                              </p>
+                              <p
+                                 class="w-4/5 py-2 m-auto menu-item active:text-orange hover:cursor-pointer hover:opacity-80"
+                                 data-menu="Nihon shu"
+                              >
+                                 Nihon shu
+                              </p>
+                              <p
+                                 class="w-4/5 py-2 m-auto menu-item active:text-orange hover:cursor-pointer hover:opacity-80"
+                                 data-menu="Whisky"
+                              >
+                                 Whisky
+                              </p>
+                           </div>
+                        </div>
+                        <div
+                           class="w-11/12 h-[13.9rem] mx-auto text-center translate-y-32 rounded-2xl"
+                        >
+                           <div
+                              class="overflow-auto font-semibold translate-y-2 border rounded-tl-2xl rounded-tr-2xl border-main h-[8.8rem] text-gray_dark screen-foods-list"
+                           >
+                              <p class="py-1" data-food="Horu yakisoba">
+                                 Horu yakisoba
+                              </p>
+                              <p class="py-1" data-food="Tori no karaage">
+                                 Tori no karaage
+                              </p>
+                              <p class="py-1" data-food="Nankotsu karaage">
+                                 Nankotsu karaage
+                              </p>
+                              <p class="py-1" data-food="Horu yakisoba">
+                                 Horu yakisoba
+                              </p>
+                              <p class="py-1" data-food="Tori no karaage">
+                                 Tori no karaage
+                              </p>
+                              <p class="py-1" data-food="Nankotsu karaage">
+                                 Nankotsu karaage
+                              </p>
+                              <p class="py-1" data-food="Horu yakisoba">
+                                 Horu yakisoba
+                              </p>
+                              <p class="py-1" data-food="Tori no karaage">
+                                 Tori no karaage
+                              </p>
+                              <p class="py-1" data-food="Nankotsu karaage">
+                                 Nankotsu karaage
+                              </p>
+                           </div>
+                           <div
+                              class="absolute bottom-0 left-0 flex items-center w-full h-16 text-5xl bg-main rounded-bl-2xl rounded-br-2xl justify-evenly"
+                           >
+                              <button
+                                 class="w-20 duration-75 h-14 bg-danger rounded-2xl active:translate-y-1"
+                                 id="btnBackToPage1"
+                              >
+                                 <img
+                                    src="../src/svg/back.svg"
+                                    alt=""
+                                    class="w-14 -translate-y-[3px] translate-x-[10px]"
+                                 />
+                              </button>
+                              <button
+                                 class="w-20 duration-75 h-14 bg-warning rounded-2xl active:translate-y-1"
+                                 id="btnCheck"
+                              >
+                                 <img
+                                    src="../src/svg/hamburger-menu.svg"
+                                    alt="hamburger menu"
+                                    class="w-14 -translate-y-[2px] translate-x-[12px] svg-ordered-list"
+                                 />
+                              </button>
+                              <button
+                                 class="w-20 duration-75 h-14 bg-success rounded-2xl active:translate-y-1"
+                                 id="btnConfirm"
+                              >
+                                 <img
+                                    src="../src/svg/ok.svg"
+                                    alt="Ok button"
+                                    class="w-14 -translate-y-[3px] translate-x-[10px]"
+                                 />
+                              </button>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </section>
+               <section
+                  class="absolute top-0 right-0 translate-x-[200%] page-3"
+               >
+                  <div class="w-screen h-fit">
+                     <div
+                        class="w-4/5 px-2 pt-2 m-auto bg-white h-[26rem] rounded-2xl"
+                     >
+                        <div
+                           class="w-full mx-auto h-[19.4rem] bg-main rounded-tl-2xl rounded-tr-2xl px-2 pt-2"
+                        >
+                           <table class="w-full text-lg text-white">
+                              <thead>
+                                 <tr>
+                                    <th colspan="3" class="text-2xl">
+                                       Ordered Menu
+                                    </th>
+                                 </tr>
+                                 <tr>
+                                    <th colspan="2" class="">Foods</th>
+                                    <th colspan="1">Quantity</th>
+                                 </tr>
+                              </thead>
+                              <tbody id="inpList" class="h-56 overflow-y-auto">
+                                 <!-- <tr>
+                                 <td colspan="2">Horu yakisoba</td>
+                                 <td colspan="1" class="text-center ">3</td>
+                              </tr> -->
+                              </tbody>
+                           </table>
+                        </div>
+                        <div
+                           class="w-full h-20 pl-2 mt-2 bg-main rounded-bl-2xl rounded-br-2xl"
+                        >
+                           <p class="text-2xl font-medium text-white">
+                              Notification :
+                           </p>
+                           <!-- <p class="text-2xl font-medium text-danger">
+                              Error : No table inputed !
+                           </p> -->
+                           <!-- <p class="text-2xl font-medium text-success">
+                              Food succesfully sent !
+                           </p> -->
+                           <div class="final-notif">
+                              <p class="text-2xl font-medium text-success">-</p>
+                           </div>
+                        </div>
+                     </div>
+                     <div
+                        class="flex items-center w-4/5 mx-auto mt-2 bg-white rounded-2xl h-[68px] justify-evenly"
+                     >
+                        <button
+                           class="w-20 duration-75 h-14 bg-danger rounded-2xl active:translate-y-1"
+                           id="btnBackToPage2"
+                        >
+                           <img
+                              src="../src/svg/back.svg"
+                              alt="back button"
+                              class="w-14 -translate-y-[3px] translate-x-[10px]"
+                           />
+                        </button>
+                        <!-- <button
+                           class="w-20 duration-75 h-14 bg-warning rounded-2xl active:translate-y-1"
+                           id="btnCheck"
+                        >
+                           <img
+                              src="../src/svg/hamburger-menu.svg"
+                              alt="hamburger menu"
+                              class="w-14 -translate-y-[2px] translate-x-[12px] svg-ordered-list"
+                           />
+                        </button> -->
+                        <button
+                           class="w-20 duration-75 h-14 bg-success rounded-2xl active:translate-y-1"
+                           id="btnSendFinal"
+                        >
+                           <img
+                              src="../src/svg/send.svg"
+                              alt="send button"
+                              class="w-12 translate-x-[20px]"
+                           />
+                        </button>
+                     </div>
+                  </div>
+               </section>
+            </div>
+         </div>
+      </main>
+
+      <!-- Modal input -->
+      <div
+         class="absolute top-0 left-0 w-full h-full duration-75 -z-10 modal-bg"
+      >
+         <div
+            class="absolute z-20 w-4/5 pb-2 -translate-x-1/2 -translate-y-1/2 bg-white border-2 h-fit top-1/2 left-1/2 border-main rounded-2xl modal-input-menu"
+         >
+            <h4 class="pl-2 text-2xl font-medium">
+               Input menu
+               <span
+                  class="absolute right-0 w-4 h-4 text-xs text-center text-white -translate-x-1/2 translate-y-1/2 rounded-full bg-danger btnCloseModalInput"
+                  >X</span
+               >
+            </h4>
+            <p class="pl-2 text-lg font-medium">
+               Food name : <span id="foodName">Horumon yakisoba</span>
+            </p>
+            <p class="pl-2 text-lg font-medium">
+               Quantity : <span class="text-main" id="foodsQuantity">1</span>
+            </p>
+            <div
+               class="flex pl-2 mt-2 font-medium text-center text-white justify-evenly"
+            >
+               <button
+                  class="w-2/5 h-10 rounded-2xl bg-danger"
+                  id="btnDecreaseQuantity"
+               >
+                  Decrease (-)
+               </button>
+               <button
+                  class="w-2/5 h-10 rounded-2xl bg-success"
+                  id="btnIncreaseQuantity"
+               >
+                  Increase (+)
+               </button>
+            </div>
+            <button
+               class="block w-4/5 h-10 mx-auto mt-4 text-white rounded-2xl bg-main"
+               id="btnConfirmQuantity"
+            >
+               Confirm
+            </button>
+         </div>
+      </div>
+      <!-- End Modal -->
+      <script>
+         const modalInputMenu = document.querySelector('.modal-input-menu');
+         const containerSlider = document.querySelector('.slide-container');
+         const selectMenu = document.querySelector('.select-menu');
+         const wrapperDeco = document.querySelector('.wrapper-deco');
+         const svgOrderedList = document.querySelector('.svg-ordered-list');
+         const categoriesContainer = document.querySelector(
+            '.categories-container'
+         );
+         const btnCloseModalInput = document.querySelector(
+            '.btnCloseModalInput'
+         );
+         const modalBg = document.querySelector('.modal-bg');
+         const screenOption = document.querySelector('.option-screen');
+         const containerKeypad = document.querySelector('.keypad-grid');
+         const finalNotif = document.querySelector('.final-notif');
+         const inpList = document.getElementById('inpList');
+         const inpFoodsQuantity = document.getElementById('foodsQuantity');
+         const inpOptions = document.getElementById('inpOptions');
+         const inpSeatNumber = document.getElementById('seatNumber');
+         const inpTable = document.getElementById('inpTable');
+         const inpFoodName = document.getElementById('foodName');
+         const btnSendFinal = document.getElementById('btnSendFinal');
+         const btnBackToPage1 = document.getElementById('btnBackToPage1');
+         const btnBackToPage2 = document.getElementById('btnBackToPage2');
+         const btnConfirm = document.getElementById('btnConfirm');
+         const btnDecreaseQuantity = document.getElementById(
+            'btnDecreaseQuantity'
+         );
+         const btnIncreaseQuantity = document.getElementById(
+            'btnIncreaseQuantity'
+         );
+         const btnConfirmQuantity =
+            document.getElementById('btnConfirmQuantity');
+
+         let orderedMenu = {};
+
+         //////////////////////////////////
+         const gotoNextPage = function () {
+            if (inpTable.value) {
+               containerSlider.style.transform = 'translate(-100%)';
+               inpSeatNumber.innerText = inpTable.value;
+            } else {
+               containerSlider.style.transform = 'translate(-100%)';
+               inpSeatNumber.innerText = '--no input--';
+            }
+         };
+
+         const handleInputMenu = function (el) {
+            modalInputMenu.classList.toggle('active');
+            modalBg.classList.toggle('blurry-bg');
+
+            inpFoodName.innerText = el.dataset.food;
+            inpFoodsQuantity.innerText = 1;
+         };
+
+         const handleConfirmationOrderedMenu = function () {
+            inpList.innerHTML = '';
+            for (const [food, quantity] of Object.entries(orderedMenu)) {
+               const markup = `<tr>
+                                 <td colspan="2" class="inline-block w-48">${food}</td>
+                                 <td colspan="1" class="text-center ">${quantity}</td>
+                              </tr>`;
+               inpList.insertAdjacentHTML('beforeend', markup);
+            }
+         };
+
+         //////////////////////////////////
+         // event listener
+         containerKeypad.addEventListener('click', function (e) {
+            const keypad = e.target.closest('.flex.items-center');
+            if (!keypad) return;
+
+            const inpRaw = e.target.innerText;
+
+            if (inpRaw.match(/[0-9]/)) {
+               inpTable.value = inpTable.value + inpRaw;
+            } else {
+               inpRaw === 'del'
+                  ? (inpTable.value = '')
+                  : inpRaw === 'Next'
+                  ? gotoNextPage()
+                  : '';
+            }
+         });
+
+         screenOption.addEventListener('click', function (e) {
+            const selectedMenu = e.target.closest('p[data-food]');
+
+            if (selectedMenu) {
+               handleInputMenu(selectedMenu);
+            }
+         });
+
+         inpOptions.addEventListener('change', function (e) {
+            console.log(e.target.value);
+         });
+
+         btnConfirmQuantity.addEventListener('click', function () {
+            const food = inpFoodName.innerText;
+            const quantity = Number(inpFoodsQuantity.innerText);
+
+            if (food in orderedMenu) orderedMenu[food] += quantity;
+            else orderedMenu[food] = quantity;
+
+            modalInputMenu.classList.toggle('active');
+            modalBg.classList.toggle('blurry-bg');
+
+            svgOrderedList.classList.add('animate-success-adding');
+            setTimeout(
+               () => svgOrderedList.classList.remove('animate-success-adding'),
+               1200
+            );
+
+            console.log(orderedMenu);
+         });
+
+         btnSendFinal.addEventListener('click', function () {
+            const seat = Number(inpSeatNumber.innerText)
+               ? inpSeatNumber.innerText
+               : false;
+
+            const htmlHelper = (condition, message) => {
+               return `<p class="text-xl font-medium text-${condition}">
+                        ${message}
+                     </p>`;
+            };
+
+            finalNotif.innerHTML = '';
+            if (!seat) {
+               finalNotif.insertAdjacentHTML(
+                  'beforeend',
+                  htmlHelper('danger', 'Error : No table inputed !')
+               );
+            } else if (Object.keys(orderedMenu).length === 0) {
+               finalNotif.insertAdjacentHTML(
+                  'beforeend',
+                  htmlHelper('warning', 'Warning : No food inputed !')
+               );
+            } else {
+               const readyToSendData = JSON.stringify({
+                  request: 'request-staff-sendfood',
+                  data: {
+                     seat: seat,
+                     menuList: orderedMenu,
+                  },
+               });
+
+               orderedMenu = {};
+               inpSeatNumber.innerText = '-';
+               inpTable.value = '';
+               finalNotif.innerHTML = '';
+               containerSlider.style.transform = 'translate(0)';
+
+               alert('Food delivered !');
+               console.log(readyToSendData);
+            }
+         });
+
+         selectMenu.onclick = () => {
+            wrapperDeco.classList.toggle('active');
+            categoriesContainer.classList.toggle('active');
+         };
+
+         btnCloseModalInput.onclick = () => {
+            modalInputMenu.classList.remove('active');
+            modalBg.classList.remove('blurry-bg');
+         };
+
+         btnBackToPage1.onclick = () => {
+            containerSlider.style.transform = 'translate(0)';
+         };
+
+         btnBackToPage2.onclick = () => {
+            containerSlider.style.transform = 'translate(-100%)';
+         };
+
+         btnConfirm.onclick = () => {
+            containerSlider.style.transform = 'translate(-200%)';
+            handleConfirmationOrderedMenu();
+         };
+
+         btnIncreaseQuantity.onclick = () => inpFoodsQuantity.innerText++;
+         btnDecreaseQuantity.onclick = () => inpFoodsQuantity.innerText--;
+      </script>
+   </body>
+</html>

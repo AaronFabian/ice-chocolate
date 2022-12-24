@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-   content: ['./*'],
+   content: ['./views/*'],
    theme: {
       fontFamily: {
          body: ['Inter, sans-serif'],
