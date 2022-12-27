@@ -1,0 +1,3 @@
+<?php
+
+echo "printer view";
