@@ -65,14 +65,14 @@
                Staff list
             </h3>
          </div>
-         <div class="w-[48%] h-32 max-w-[160px] rounded-lg bg-orange hover:opacity-80 hover:cursor-pointer icon-animate" id="inpFood">
+         <a href="?menu=food-view&staff=<?= $_SESSION['worker-id']; ?>" class="w-[48%] h-32 max-w-[160px] rounded-lg bg-orange hover:opacity-80 hover:cursor-pointer icon-animate" id="inpFood">
             <img src="src/svg/shopping-bag.svg" alt="food list icon" class="w-20 pt-1 mx-auto" />
             <h3 class="pb-4 mx-auto text-center text-white">Food List</h3>
-         </div>
-         <div class="w-[48%] max-w-[160px] h-32 rounded-lg bg-danger hover:opacity-80 hover:cursor-pointer icon-animate" id="inpTable">
+         </a>
+         <a href="?menu=table-view&staff=<?= $_SESSION['worker-id']; ?>" class="w-[48%] max-w-[160px] h-32 rounded-lg bg-danger hover:opacity-80 hover:cursor-pointer icon-animate" id="inpTable">
             <img src="src/svg/table-row.svg" alt="food list icon" class="w-20 pt-1 mx-auto" />
             <h3 class="pb-4 mx-auto text-center text-white">Table Row</h3>
-         </div>
+         </a>
          <div class="w-[48%] max-w-[160px] h-32 rounded-lg bg-success hover:opacity-80 hover:cursor-pointer icon-animate" id="inpPrinter">
             <img src="src/svg/printer.svg" alt="food list icon" class="w-20 pt-1 mx-auto" />
             <h3 class="pb-4 mx-auto text-center text-white">Printer</h3>
@@ -94,14 +94,14 @@
             </h2>
             <div class="h-[76%] mx-auto mt-2 list-staff-container flex flex-col gap-2 overflow-y-scroll py-1 mb-2">
                <?php foreach ($workerList as $w) : ?>
-                  <ul id="staff-item" class="flex hover:opacity-90 w-11/12 h-10 mx-auto text-[18px] bg-white rounded-bl-2xl rounded-tr-2xl rounded-tl-md hover:cursor-pointer rounded-br-md text-white leading-9">
-                     <li class="w-[16%] text-center bg-warning rounded-tl-md rounded-bl-2xl">
+                  <a id="staff-item" class="flex hover:opacity-90 w-11/12 h-10 mx-auto text-[18px] bg-white rounded-bl-2xl rounded-tr-2xl rounded-tl-md hover:cursor-pointer rounded-br-md text-white leading-9" href="?menu=setting-view&staff=<?= $w->getWorkerID(); ?>">
+                     <span class="w-[16%] text-center bg-warning rounded-tl-md rounded-bl-2xl">
                         <?= $w->getWorkerID(); ?>
-                     </li>
-                     <li class="w-[84%] text-center bg-success rounded-tr-2xl rounded-br-md">
+                     </span>
+                     <span class="w-[84%] text-center bg-success rounded-tr-2xl rounded-br-md">
                         <?= $w->getName(); ?>
-                     </li>
-                  </ul>
+                     </span>
+                  </a>
                <?php endforeach; ?>
             </div>
             <div class="relative flex items-center justify-center w-11/12 h-12 mx-auto overflow-hidden text-xl bg-white div2 rounded-2xl">

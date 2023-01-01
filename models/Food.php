@@ -6,6 +6,8 @@ class Food
    private $price;
    private $description;
    private $image;
+   private $imageThumb;
+   private $added_at;
 
    private $category;
 
@@ -49,6 +51,16 @@ class Food
       $this->image = $image;
    }
 
+   public function getImageThumb()
+   {
+      return $this->imageThumb;
+   }
+
+   public function setImageThumb($imageThumb)
+   {
+      $this->imageThumb = $imageThumb;
+   }
+
    public function getCategory()
    {
       if (!isset($this->category)) {
@@ -66,6 +78,18 @@ class Food
 
       $this->category = $category;
    }
+
+   public function getAddedAt()
+   {
+      return $this->added_at;
+   }
+
+   public function setAddedAt($added_at)
+   {
+      $this->added_at = $added_at;
+   }
+
+
 
    public function __set($name, $value)
    {

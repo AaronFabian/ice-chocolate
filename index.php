@@ -12,10 +12,12 @@ include_once "./controller/SettingController.php";
 include_once "./controller/ResultController.php";
 include_once "./dao/WorkerDaoImpl.php";
 include_once "./dao/FoodDaoImpl.php";
+include_once "./dao/TableConfigDaoImpl.php";
 include_once "./models/Worker.php";
 include_once "./models/Role.php";
 include_once "./models/Food.php";
 include_once "./models/Category.php";
+include_once "./models/TableConfig.php";
 
 $menu = filter_input(INPUT_GET, 'menu');
 
@@ -33,48 +35,51 @@ if (!$menu) $menu = '';
    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;800&display=swap" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;800&display=swap" rel="stylesheet" />
-   <?php if ($menu === '' || $menu === 'home') : ?>
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css" />
-      <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
-   <?php endif; ?>
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css" />
+   <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
 
-   <!-- <link rel="stylesheet" href="dist/output.css" /> -->
-   <script src="https://cdn.tailwindcss.com"></script>
-   <script>
-      tailwind.config = {
-         content: ['./views/*'],
-         theme: {
-            fontFamily: {
-               body: ['Inter, sans-serif'],
-            },
-            extend: {
-               colors: {
-                  main: '#5e72e4',
-                  secondary: '#8392ab',
-                  warning: '#fb6340',
-                  danger: '#f5365c',
-                  success: '#2dce89',
-                  info: '#11cdef',
-                  blue: '#63b3ed',
-                  purple: '#6f42c1',
-                  pink: '#d63384',
-                  orange: '#fd7e14',
-                  yellow: '#fbd38d',
-                  green: '#81e6d9',
-                  teal: '#20c997',
-                  cyan: '#0dcaf0',
-                  gray: '#6c757d',
-                  gray_dark: '#343a40',
-                  gradient_one: 'rgba(147, 26, 222, 0.83)',
-                  gradient_two: 'rgba(28, 206, 234, 0.82)',
-                  gradient_three: '#7EE8FA',
-                  gradient_four: '#EEC0C6'
+   <?php if ($menu !== 'table-view') : ?>
+      <script src="https://cdn.tailwindcss.com"></script>
+      <script>
+         tailwind.config = {
+            content: ['./views/*'],
+            theme: {
+               fontFamily: {
+                  body: ['Inter, sans-serif'],
+               },
+               extend: {
+                  colors: {
+                     main: '#5e72e4',
+                     secondary: '#8392ab',
+                     warning: '#fb6340',
+                     danger: '#f5365c',
+                     success: '#2dce89',
+                     info: '#11cdef',
+                     blue: '#63b3ed',
+                     purple: '#6f42c1',
+                     pink: '#d63384',
+                     orange: '#fd7e14',
+                     yellow: '#fbd38d',
+                     green: '#81e6d9',
+                     teal: '#20c997',
+                     cyan: '#0dcaf0',
+                     gray: '#6c757d',
+                     gray_dark: '#343a40',
+                     gradient_one: 'rgba(147, 26, 222, 0.83)',
+                     gradient_two: 'rgba(28, 206, 234, 0.82)',
+                     gradient_three: '#7EE8FA',
+                     gradient_four: '#EEC0C6'
+                  },
                },
             },
-         },
-         plugins: [],
-      };
-   </script>
+            plugins: [],
+         };
+      </script>
+   <?php endif; ?>
+
+
+   <!-- <link rel="stylesheet" href="dist/output.css" /> -->
+
    <title>Food Manager | <?= $menu ? str_replace('-view', '', $menu) : 'welcome'; ?></title>
 </head>
 
@@ -101,6 +106,14 @@ if (!$menu) $menu = '';
          case 'setting-view':
             $settingController = new SettingController();
             $settingController->index();
+            break;
+         case 'food-view':
+            $settingController = new SettingController();
+            $settingController->food();
+            break;
+         case 'table-view':
+            $settingController = new SettingController();
+            $settingController->table();
             break;
          default:
             $homeController = new HomeController();
