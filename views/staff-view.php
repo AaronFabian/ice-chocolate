@@ -136,7 +136,7 @@
          /* 192px */
          /* 144 px */
       </style>
-      <div class="absolute top-0 left-0 z-[998] w-screen h-screen opening-animate bg-main">
+      <!-- <div class="absolute top-0 left-0 z-[998] w-screen h-screen opening-animate bg-main">
          <div class="absolute z-[999] -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2">
             <div class="w-48 h-48 rounded-full opacity-0 bg-secondary drop-shadow-xl logo-animate">
                <img class="relative w-2/3 -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" src="src/svg/eat.svg" alt="company logo" />
@@ -147,7 +147,7 @@
                </p>
             </div>
          </div>
-      </div>
+      </div> -->
 
       <main class="w-screen h-screen main-content">
          <div class="w-full h-full overflow-hidden duration1000 bg-gray_dark">
@@ -177,7 +177,7 @@
             <div class="relative overflow-visible duration-300 slide-container">
                <section class="page-1">
                   <form>
-                     <div class="w-4/5 h-48 pb-4 pl-2 mx-auto mt-8 bg-white rounded-2xl">
+                     <div class="w-4/5 pb-4 pl-2 mx-auto mt-8 bg-white h-fit rounded-2xl ">
                         <fieldset>
                            <label class="block">
                               <span class="block mt-4 text-lg font-medium text-gray_dark">Customer table number :
@@ -195,14 +195,20 @@
                               New Customer Seat
                            </div>
                            <div class="hidden peer-checked/published:block text-orange">
-                              <strong>warning</strong> : <br />input table
+                              <strong>warning</strong> : input table
                               number before next slide.
                            </div>
                         </fieldset>
+                        <label for="floorMap" class="">Floor</label>
+                        <select id="floorMap" name="floorMap" class="h-12 py-0 pl-2 text-gray-500 bg-transparent border-transparent rounded-md pr-7 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                           <option>1</option>
+                           <option>2</option>
+                           <option>3</option>
+                        </select>
                      </div>
                   </form>
                   <section>
-                     <div class="grid grid-cols-3 grid-rows-4 gap-1 px-8 mt-8 text-5xl font-semibold keypad-grid text-gray_dark group hover:cursor-pointer">
+                     <!-- <div class="grid grid-cols-3 grid-rows-4 gap-1 px-8 mt-8 text-5xl font-semibold keypad-grid text-gray_dark group hover:cursor-pointer">
                         <div class="flex items-center justify-center w-full h-16 duration-75 bg-warning rounded-tl-2xl active:text-pink hover:text-white active:translate-y-1">
                            7
                         </div>
@@ -236,6 +242,16 @@
                         <button id="nextBtn" class="flex items-center justify-center w-full h-16 col-span-2 text-center duration-75 bg-main rounded-br-2xl active:text-pink hover:text-white active:translate-y-1">
                            Next
                         </button>
+                     </div> -->
+                     <div class="relative w-4/5 p-2 mx-auto mt-2 bg-white h-fit container-table-layout rounded-2xl keypad-table">
+                        <div class="overflow-y-auto text-center max-h-[12rem]" id="tableBody">
+                           <!-- <ul class="mx-auto text-lg font-medium text-white w-fit">
+                              <li class="inline-block p-1 border rounded-lg bg-gray" data-table="101">101</li>
+                              <li class="inline-block p-1 border rounded-lg bg-main" data-table="102">102</li>
+                              <li class="inline-block p-1 border rounded-lg bg-main" data-table="103">103</li>
+                           </ul> -->
+                        </div>
+                        <button class="block px-16 py-1 m-auto mt-2 font-medium text-white rounded-2xl bg-warning item-table" data-table="next">Next</button>
                      </div>
                   </section>
                </section>
@@ -395,6 +411,11 @@
       </div>
       <!-- End Modal -->
       <script>
+         <?php
+         $floor = $defaultTableConfig->getFloor();
+         $row = $defaultTableConfig->getTotalRow();
+         $column = $defaultTableConfig->getTotalColumn();
+         ?>
          const modalInputMenu = document.querySelector('.modal-input-menu');
          const containerSlider = document.querySelector('.slide-container');
          const selectMenu = document.querySelector('.select-menu');
@@ -409,7 +430,7 @@
          const modalBg = document.querySelector('.modal-bg');
          const screenFoodsList = document.querySelector('.screen-foods-list');
          const screenOption = document.querySelector('.option-screen');
-         const containerKeypad = document.querySelector('.keypad-grid');
+         const containerTable = document.querySelector('.keypad-table');
          const finalNotif = document.querySelector('.final-notif');
          const inpList = document.getElementById('inpList');
          const inpFoodsQuantity = document.getElementById('foodsQuantity');
@@ -431,6 +452,7 @@
             document.getElementById('btnConfirmQuantity');
 
          let orderedMenu = {};
+         let currentFloorView = 1;
 
          //////////////////////////////////
          const gotoNextPage = function() {
@@ -464,9 +486,76 @@
 
          //////////////////////////////////
          // event listener
+         class TableConfig {
+            #tableBody = document.getElementById('tableBody');
+            #maxRow;
+            #maxColumn;
+            #floor;
+
+            constructor(maxRow = 0, maxColumn = 0, floor = 0) {
+               this.#maxRow = maxRow;
+               this.#maxColumn = maxColumn;
+               this.#floor = floor;
+
+               this.renderTable();
+            }
+
+            renderTable() {
+               let floor = this.#floor;
+               let row = 1;
+               let col = 0;
+               let markup = '';
+
+               if (this.#maxRow > 9 || this.#maxColumn > 4)
+                  return alert(`configuration error ! floor : ${this.#floor}`);
+
+               if (!this.#maxRow && !this.#maxColumn) {
+                  markup += '<tr><td>no data found</td></tr>';
+               } else {
+                  for (let i = 0; i < this.#maxRow; i++) {
+                     markup += '<ul class="mx-auto text-lg font-medium text-white w-fit">';
+                     for (let j = 0; j < this.#maxColumn; j++) {
+                        markup += `<li class="inline-block w-12 py-2 m-[0.15rem] border rounded-lg bg-main item-table" data-table="${floor}${col}${row}">${floor}${col}${row}</li>`;
+                        col++;
+                     }
+                     col = 0;
+                     row++;
+                     markup += '</ul>';
+                  }
+               }
+
+               this.#tableBody.innerHTML = '';
+               this.#tableBody.insertAdjacentHTML('beforeend', markup);
+            }
+         }
+
+         // the default params got from php
+         let tableConfig = new TableConfig(<?= $row ?>, <?= $column ?>, <?= $floor ?>);
+
          class AjaxEvent {
             constructor() {
                categoriesContainer.addEventListener('click', this.getFood.bind(this));
+               floorMap.addEventListener('change', this.getFloorConfig.bind(this));
+            }
+
+            async getFloorConfig(e) {
+               const reqFloor = e.target.value;
+               const floorData = await this.fetchFloor(reqFloor);
+
+               if (!floorData) return;
+
+               const {
+                  row,
+                  column,
+                  floor
+               } = floorData;
+               new TableConfig(row, column, floor);
+               currentFloorView = floor;
+            }
+
+            fetchFloor(req) {
+               return fetch(`ajax/request-floor.php?floor=${req}`)
+                  .then(res => res.json());
             }
 
             async getFood(e) {
@@ -493,21 +582,14 @@
 
          const ajax = new AjaxEvent();
 
-         containerKeypad.addEventListener('click', function(e) {
-            const keypad = e.target.closest('.flex.items-center');
-            if (!keypad) return;
+         containerTable.addEventListener('click', function(e) {
+            const keypadEl = e.target.closest('.item-table');
+            if (!keypadEl) return;
 
-            const inpRaw = e.target.innerText;
+            const inpRaw = keypadEl.dataset.table;
 
-            if (inpRaw.match(/[0-9]/)) {
-               inpTable.value = inpTable.value + inpRaw;
-            } else {
-               inpRaw === 'del' ?
-                  (inpTable.value = '') :
-                  inpRaw === 'Next' ?
-                  gotoNextPage() :
-                  '';
-            }
+            if (inpRaw.match(/[0-9]/)) inpTable.value = inpRaw;
+            else inpRaw === 'next' ? gotoNextPage() : console.log('error');;
          });
 
          screenOption.addEventListener('click', function(e) {
@@ -554,15 +636,9 @@
 
             finalNotif.innerHTML = '';
             if (!seat) {
-               finalNotif.insertAdjacentHTML(
-                  'beforeend',
-                  htmlHelper('danger', 'Error : No table inputed !')
-               );
+               finalNotif.insertAdjacentHTML('beforeend', htmlHelper('danger', 'Error : No table inputed !'));
             } else if (Object.keys(orderedMenu).length === 0) {
-               finalNotif.insertAdjacentHTML(
-                  'beforeend',
-                  htmlHelper('warning', 'Warning : No food inputed !')
-               );
+               finalNotif.insertAdjacentHTML('beforeend', htmlHelper('warning', 'Warning : No food inputed !'));
             } else {
                const readyToSendData = JSON.stringify({
                   request: 'request-staff-sendfood',

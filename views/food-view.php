@@ -18,9 +18,9 @@
    }
 
    .active-add-category {
-         opacity: 1;
-         visibility: visible;
-      }
+      opacity: 1;
+      visibility: visible;
+   }
 </style>
 <div class="w-full xl:w-3/4 2xl:w-4/5">
    <div class="px-4 py-4 md:px-10 md:py-7">
@@ -139,7 +139,7 @@
 
                   <div class="text-center">
                      <label for="inpImage" class="block mx-auto mb-2 rounded-lg shadow-sm label-for-edit drop-shadow-lg border-radius-lg profile-img" style="background-size: cover;height: 130px;width: 150px;cursor: pointer;"></label>
-                     <input type="file" class="input-profile-img" id="inpImage" name="inpImage" accept="image.png, image/jpeg" hidden>
+                     <input type="file" class="input-profile-img" id="inpImage" name="inpImage" accept="image/png, image/jpeg" hidden>
                   </div>
                </div>
                <div class="relative">
@@ -149,12 +149,17 @@
                   <input type="hidden" id="hiddenInpFileImage" name="oldImage">
                </div>
                <div class="relative">
-                  <input type="text" id="inpCategory" class="block pr-2.5 pb-2.5 pt-4 text-lg text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none text-gray_dark focus:outline-none focus:ring-0 focus:border-blue-600 peer mr-auto w-3/4" value="" placeholder=" " name="inpCategory" />
-                  <label for="inpcategory" class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-2 scale-75 top-2 z-10 origin-[0] bg-transparent pr-2 peer-focus:pr-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-2">Category&nbsp;</label>
-               </div>
-               <div class="relative">
                   <input type="text" id="inpPrice" class="block pr-2.5 pb-2.5 pt-4 text-lg text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none text-gray_dark focus:outline-none focus:ring-0 focus:border-blue-600 peer mr-auto w-3/4" value="" placeholder=" " name="inpPrice" />
                   <label for="inpprice" class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-2 scale-75 top-2 z-10 origin-[0] bg-transparent pr-2 peer-focus:pr-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-2">Price&nbsp;</label>
+               </div>
+
+               <div class="relative">
+                  <select id="inpcategory" name="inpCategory" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-gray_dark  focus:ring-blue-500 focus:border-blue-500 border-gray_dark my-2">
+                     <option value="">Category</option>
+                     <?php foreach ($fetchAllCategories as $c) : ?>
+                        <option value="<?= $c->getfoodCategory(); ?>"><?= $c->getfoodCategory(); ?></option>
+                     <?php endforeach; ?>
+                  </select>
                </div>
 
                <label for="inpDescription" class="block mt-6 mb-2 text-sm font-medium text-gray-900 dark:text-gray_dark">Desc&nbsp;:</label>
@@ -169,8 +174,10 @@
       </div>
    </div>
 </form>
+
+<!-- Second modal -->
 <div class="relative z-10 category-modal" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-  <!--
+   <!--
     Background backdrop, show/hide based on modal state.
 
     Entering: "ease-out duration-300"
@@ -184,11 +191,11 @@
          opacity: 100;
       }
   -->
-  <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"></div>
+   <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"></div>
 
-  <div class="fixed inset-0 z-10 overflow-y-auto">
-    <div class="flex items-end justify-center min-h-full p-4 text-center sm:items-center sm:p-0">
-      <!--
+   <div class="fixed inset-0 z-10 overflow-y-auto">
+      <div class="flex items-end justify-center min-h-full p-4 text-center sm:items-center sm:p-0">
+         <!--
         Modal panel, show/hide based on modal state.
 
         Entering: "ease-out duration-300"
@@ -198,31 +205,41 @@
           From: "opacity-100 translate-y-0 sm:scale-100"
           To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
       -->
-      <div class="relative overflow-hidden text-left transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:w-full sm:max-w-lg">
-        <div class="px-4 pt-5 pb-4 bg-white sm:p-6 sm:pb-4">
-          <div class="sm:flex sm:items-start">
-            <div class="flex items-center justify-center flex-shrink-0 w-12 h-12 mx-auto bg-red-100 rounded-full sm:mx-0 sm:h-10 sm:w-10">
-              <!-- Heroicon name: outline/exclamation-triangle -->
-              <svg class="w-6 h-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 10.5v3.75m-9.303 3.376C1.83 19.126 2.914 21 4.645 21h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 4.88c-.866-1.501-3.032-1.501-3.898 0L2.697 17.626zM12 17.25h.007v.008H12v-.008z" />
-              </svg>
-            </div>
-            <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-              <h3 class="text-lg font-medium leading-6 text-gray-900" id="modal-title">Deactivate account</h3>
-              <div class="mt-2">
-                <p class="text-sm text-gray-500">Are you sure you want to deactivate your account? All of your data will be permanently removed. This action cannot be undone.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="px-4 py-3 bg-gray-50 sm:flex sm:flex-row-reverse sm:px-6">
-          <button type="button" class="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm">Deactivate</button>
-          <button type="button" class="inline-flex justify-center w-full px-4 py-2 mt-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm cancel-add-category-btn">Cancel</button>
-        </div>
+         <div class="relative overflow-hidden text-left transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:w-full sm:max-w-lg">
+            <form action="" method="POST">
+               <div class="px-4 pt-5 pb-4 bg-white sm:p-6 sm:pb-4">
+                  <div class="sm:flex sm:items-start">
+                     <div class="flex items-center justify-center flex-shrink-0 w-12 h-12 mx-auto bg-red-100 rounded-full sm:mx-0 sm:h-10 sm:w-10">
+                        <!-- Heroicon name: outline/exclamation-triangle -->
+                        <svg class="w-6 h-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                           <path stroke-linecap="round" stroke-linejoin="round" d="M12 10.5v3.75m-9.303 3.376C1.83 19.126 2.914 21 4.645 21h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 4.88c-.866-1.501-3.032-1.501-3.898 0L2.697 17.626zM12 17.25h.007v.008H12v-.008z" />
+                        </svg>
+                     </div>
+                     <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                        <h3 class="text-lg font-medium leading-6 text-gray-900" id="modal-title">Add new category</h3>
+                        <div class="relative my-4">
+                           <input type="text" id="inpCategory" class="block pr-2.5 pb-2.5 pt-4 text-lg text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none text-gray_dark focus:outline-none focus:ring-0 focus:border-blue-600 peer mr-auto w-3/4" value="input..." placeholder=" " name="inpCategory" />
+                           <label for="inpCategory" class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-2 scale-75 top-2 z-10 origin-[0] bg-transparent pr-2 peer-focus:pr-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-2">Category&nbsp;</label>
+                        </div>
+                        <div class="mt-2">
+                           <p class="text-sm text-gray-500">(caution : new category may cause system crash make sure you understand the system. )</p>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="px-4 py-3 bg-gray-50 sm:flex sm:flex-row-reverse sm:px-6">
+                  <button type="submit" class="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm" name="btnSave" value="category">Add new !</button>
+                  <button type="button" class="inline-flex justify-center w-full px-4 py-2 mt-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm cancel-add-category-btn">Cancel</button>
+               </div>
+            </form>
+         </div>
       </div>
-    </div>
-  </div>
+   </div>
 </div>
+<!-- End second modal -->
+<a href="?menu=" class="w-10 h-10 rounded-full">
+   <img src="./src/svg/home.svg" alt="home button">
+</a>
 <script>
    const tbodyFoodList = document.querySelector('.tbody-food-list');
    const editorModal = document.querySelector('.editor-modal');
@@ -242,7 +259,6 @@
    const btnCancel = document.getElementById('btnCancel');
    const btnAddNewFood = document.getElementById('addNewFood');
    const btnSubmit = document.getElementById('btnSubmit');
-
 
    const handleAutoForm = function(e) {
       const selected = e.target.closest('tr');
@@ -286,7 +302,7 @@
    }
 
    const handleBlankForm = function(el) {
-      [inpFoodName, hiddenInpFoodName, inpPrice, inpCategory, inpDescription].forEach(el => el.value = '');
+      [inpFoodName, hiddenInpFoodName, inpPrice, inpDescription].forEach(el => el.value = '');
       labelForEdit.style.backgroundImage = `url("src/img/uploads/default-food.png")`;
       btnSubmit.innerText = 'Add menu !';
       btnSubmit.value = 'add';

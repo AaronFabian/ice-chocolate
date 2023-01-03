@@ -2,7 +2,7 @@
 
 class FoodDaoImpl
 {
-   public function fetchAllFoods($offset, $limitPage = 10, $category = false)
+   public function fetchAllFoods($offset = 0, $limitPage = 10, $category = false)
    {
       $link = PDOUtil::createConnection();
 
@@ -16,7 +16,7 @@ class FoodDaoImpl
          $stmt->bindParam(2, $limitPage, PDO::PARAM_INT);
          $stmt->bindParam(3, $offset, PDO::PARAM_INT);
       } else {
-         $query = "SELECT * FROM japan_restaurant.food LIMIT ? OFFSET ?";
+         $query = "SELECT * FROM japan_restaurant.food LIMIT ? OFFSET ? ";
          $stmt = $link->prepare($query);
          $stmt->bindParam(1, $limitPage, PDO::PARAM_INT);
          $stmt->bindParam(2, $offset, PDO::PARAM_INT);

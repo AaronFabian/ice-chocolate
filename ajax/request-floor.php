@@ -2,7 +2,8 @@
 
 include_once "../utils/Ajax.php";
 
-function getTableConfiguration() {
+function getTableConfiguration()
+{
    $tableObj = new Ajax();
    $tableObj = $tableObj->fetchFloor();
 

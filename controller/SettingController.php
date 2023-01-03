@@ -6,12 +6,14 @@ class SettingController
    private $workerDaoImpl;
    private $foodDaoImpl;
    private $tableConfigDaoImpl;
+   private $categoryDaoImpl;
 
    public function __construct()
    {
       $this->workerDaoImpl = new WorkerDaoImpl();
       $this->foodDaoImpl = new FoodDaoImpl();
       $this->tableConfigDaoImpl = new TableConfigDaoImpl();
+      $this->categoryDaoImpl = new CategoryDaoImpl();
    }
 
    public function index()
@@ -136,6 +138,17 @@ class SettingController
                      echo $addedStatus ? "success" : 'error saving data';
                      break;
                }
+            } else if ($btnSave === 'category') { // adding category
+               if (!empty($inpCategory)) {
+                  $newCategory = new Category();
+                  $newCategory->setfoodCategory($inpCategory);
+
+                  $status = $this->categoryDaoImpl->addNewCategory($newCategory);
+                  echo $status ? 'adding new category success' : 'fatal error';
+               } else {
+
+                  echo 'please input the category fields !';
+               }
             } else {
                echo 'please input all fields';
             }
@@ -145,6 +158,7 @@ class SettingController
          if (!isset($pagenow) || $pagenow <= 0) $pagenow = 1;
          $startPage = ($pagenow - 1) * $PERPAGE;
 
+         $fetchAllCategories = $this->categoryDaoImpl->fetchAllCategory();
          $defaultFoodList = $this->foodDaoImpl->fetchAllFoods($startPage, $PERPAGE, $category);
          $categories = $this->foodDaoImpl->fetchCategory();
          $dataTotal = count($defaultFoodList);
@@ -159,13 +173,13 @@ class SettingController
    {
       $staffId = filter_input(INPUT_GET, 'staff');
       $btnSave = filter_input(INPUT_POST, 'btnSave');
-      
+
       if (isset($staffId) and $staffId === $_SESSION['worker-id'] and $_SESSION['worker-role'] === 'manager') :
          if (isset($btnSave)) {
-            $columnConfig= filter_input(INPUT_POST, 'column-config');
+            $columnConfig = filter_input(INPUT_POST, 'column-config');
             $rowConfig = filter_input(INPUT_POST, 'row-config');
             $floor = filter_input(INPUT_POST, 'floor');
-            
+
             if (!empty($columnConfig) and !empty($rowConfig) and !empty($floor)) {
 
                $isTableAvailable = $this->tableConfigDaoImpl->fetchTableConfig($floor);
@@ -182,7 +196,6 @@ class SettingController
                   $saveStatus = $this->tableConfigDaoImpl->saveTableConfig($newTableConfig);
                   echo $saveStatus ? 'successfully saved ! ' : ' fatal: something wrong !. ';
                }
-
             } else {
                echo 'please fill all column to save data !';
             }

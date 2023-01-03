@@ -4,11 +4,13 @@ class StaffController
 {
    private $workerDaoImpl;
    private $foodDaoImpl;
+   private $tableConfigDaoImpl;
 
    public function __construct()
    {
       $this->workerDaoImpl = new WorkerDaoImpl();
       $this->foodDaoImpl = new FoodDaoImpl();
+      $this->tableConfigDaoImpl = new TableConfigDaoImpl();
    }
 
    public function index()
@@ -18,6 +20,7 @@ class StaffController
 
          $category = $this->foodDaoImpl->fetchCategory();
          $defaultMenu = $this->foodDaoImpl->fetchFoodPerCategory('whisky');
+         $defaultTableConfig = $this->tableConfigDaoImpl->fetchTableConfig(1);
 
          include_once "./views/staff-view.php";
       else :

@@ -13,6 +13,7 @@ include_once "./controller/ResultController.php";
 include_once "./dao/WorkerDaoImpl.php";
 include_once "./dao/FoodDaoImpl.php";
 include_once "./dao/TableConfigDaoImpl.php";
+include_once "./dao/CategoryDaoImpl.php";
 include_once "./models/Worker.php";
 include_once "./models/Role.php";
 include_once "./models/Food.php";

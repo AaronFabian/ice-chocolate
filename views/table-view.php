@@ -153,10 +153,14 @@
 
       async handleChange() {
          const floorReq = this.#floorConfig.value;
-         const data =  await this.fetchConfig(floorReq); 
+         const data = await this.fetchConfig(floorReq);
          if (!data) return this.#tableConfigObj = new TableConfig(0, 0, floorReq);
 
-         const {floor, column, row} = data;
+         const {
+            floor,
+            column,
+            row
+         } = data;
 
          this.#rowConfig.value = row;
          this.#columnConfig.value = column;
@@ -170,5 +174,4 @@
    }
 
    const ajax = new Ajax();
-
 </script>
