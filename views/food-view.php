@@ -237,8 +237,8 @@
    </div>
 </div>
 <!-- End second modal -->
-<a href="?menu=" class="w-10 h-10 rounded-full">
-   <img src="./src/svg/home.svg" alt="home button">
+<a href="index.php" class="fixed rounded-full bottom-3 right-3 w-14 h-14 bg-danger">
+   <img src="./src/svg/home.svg" alt="home button" class="absolute w-8 -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
 </a>
 <script>
    const tbodyFoodList = document.querySelector('.tbody-food-list');

@@ -641,7 +641,7 @@
                finalNotif.insertAdjacentHTML('beforeend', htmlHelper('warning', 'Warning : No food inputed !'));
             } else {
                const readyToSendData = JSON.stringify({
-                  request: 'request-staff-sendfood',
+                  request: 'post-staff-orderfood',
                   data: {
                      seat: seat,
                      menuList: orderedMenu,

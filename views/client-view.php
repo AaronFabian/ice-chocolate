@@ -153,6 +153,12 @@
             100% 0%);
    }
 
+   .hidden-it {
+      display: none;
+      visibility: hidden;
+      opacity: 0;
+   }
+
    @keyframes start-pulse {
       0% {
          transform: translate(0);
@@ -261,9 +267,9 @@
 <!-- Start Lockscreen -->
 <div class="fixed top-0 left-0 z-[998] w-screen h-screen bg-black lockscreen-container flex items-center justify-center duration-500">
    <div class="relative flex items-center justify-center w-full h-full bg-black lockscreen-content">
-      <video autoplay muted loop plays-inline class="block w-full h-full bg-video">
+      <!-- <video autoplay muted loop plays-inline class="block w-full h-full bg-video">
          <source src="src/video/lockscreenAds.mp4" type="video/mp4" />
-      </video>
+      </video> -->
       <div class="absolute top-0 left-0 w-full h-full bg-[rgba(0,0,0,0.6)] flex flex-col justify-center items-center welcome-screen">
          <div class="animate-pulse">
             <h4 class="font-bold text-white text-8xl">Welcome</h4>
@@ -342,8 +348,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js" integrity="sha512-6+YN/9o9BWrk6wSfGxQGpt3EUK6XeHi6yeHV+TYD2GR0Sj/cggRpXr1BrAQf0as6XslxomMUxXp2vIl+fv0QRA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script>
+   // Intertwined with php
    const loadJSON = <?= $loadJson ?>;
-   console.log(loadJSON);
    const allMenu = loadJSON.data.allMenu;
    const loadmarkup = (foodName, imageSrc) => {
       return ` <div class="w-[23%] min-h-[10rem] bg-white rounded-lg item-container ">
@@ -550,7 +556,7 @@
       if (Object.keys(orderedMenu).length === 0) return;
 
       const readyToSendData = JSON.stringify({
-         request: 'request-client-sendfood',
+         request: 'post-client-orderfood',
          data: {
             seat: table,
             menuList: orderedMenu,
@@ -590,5 +596,27 @@
    // delete soon in production
    welcomeScreen.onclick = () => {
       lockscreenContainer.classList.add('active-client');
+      setTimeout(() => {
+         lockscreenContainer.classList.add('hidden-it');
+      }, 500)
+   };
+</script>
+<script>
+   //////////////////////////
+   ////////// websocket file
+   const conn = new WebSocket('ws://localhost:8081');
+   conn.onopen = function(e) {
+      console.log("Connection established!");
+      const readyToSendData = {
+         request: 'request-table-connection',
+         data: {
+            table: table
+         },
+      }
+      conn.send(JSON.stringify(readyToSendData));
+   };
+
+   conn.onmessage = function(e) {
+      console.log(e.data);
    };
 </script>
