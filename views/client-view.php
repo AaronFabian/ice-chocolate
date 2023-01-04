@@ -184,7 +184,7 @@
             </p>
          </div>
          <div class="flex items-center border-gray_dark bg-main justify-center w-32 border-r-[1px]">
-            <p class="pr-2 font-medium text-white table-number"><?= $tableNumber; ?></p>
+            <p class="pr-2 font-medium text-white table-number"><?= $tableNumber ? $tableNumber : ''; ?></p>
             <img src="src/svg/user.svg" alt="" class="w-6" />
          </div>
          <div class="w-16 bg-main btn-toggle-modal">
@@ -260,6 +260,9 @@
          </ul>
          <div></div>
       </div>
+      <p class="text-gray_dark">
+         <small>connected by id : <span class="connected-id"><?= $_SESSION['worker-id']; ?></span></small>
+      </p>
    </footer>
 </main>
 <!-- End Content -->
@@ -365,6 +368,9 @@
                </div>
       `
    };
+
+   const table = document.querySelector('.table-number').innerText;
+   const connectedId = document.querySelector('.connected-id').innerText;
    const markupMap = new Map();
    for (let [key, value] of Object.entries(allMenu)) {
       let data = [];
@@ -397,6 +403,33 @@
 </script>
 
 <script>
+   //////////////////////////
+   ////////// websocket file
+   const conn = new WebSocket('ws://localhost:8081');
+   conn.onopen = function(e) {
+      try {
+         if (!table) throw alert('error: call staff immediately');
+
+         console.log("Connection established!");
+         const readyToSendData = {
+            request: 'get-table-connection',
+            data: {
+               table: table
+            },
+         }
+         conn.send(JSON.stringify(readyToSendData));
+
+      } catch (err) {
+         console.warn('error');
+      }
+   };
+
+   conn.onmessage = function(e) {
+      console.log(JSON.parse(e.data));
+   };
+</script>
+
+<script>
    const lockscreenContainer = document.querySelector(
       '.lockscreen-container'
    );
@@ -420,7 +453,6 @@
    const categoryMenu = document.getElementById('categoryMenu');
    const categoriesEl = document.querySelectorAll('.category-item');
 
-   const table = document.querySelector('.table-number').innerText;
    let orderedMenu = {}; // { key => value }
 
    /////////////////////////////
@@ -552,16 +584,17 @@
       console.log(orderedMenu);
    });
 
-   btnSendData.addEventListener('click', function() {
+   btnSendData.addEventListener('click', function() { // !!!
       if (Object.keys(orderedMenu).length === 0) return;
 
-      const readyToSendData = JSON.stringify({
+      const readyToSendData = {
          request: 'post-client-orderfood',
          data: {
+            connectedId: connectedId,
             seat: table,
             menuList: orderedMenu,
          },
-      });
+      };
 
       modalMenu.classList.remove('active-modal-menu');
       confirmDecoration.classList.remove('active-animate');
@@ -574,6 +607,7 @@
 
       orderedMenu = {};
 
+      conn.send(JSON.stringify(readyToSendData));
       console.log(readyToSendData);
       audio.complete.play();
    });
@@ -599,24 +633,5 @@
       setTimeout(() => {
          lockscreenContainer.classList.add('hidden-it');
       }, 500)
-   };
-</script>
-<script>
-   //////////////////////////
-   ////////// websocket file
-   const conn = new WebSocket('ws://localhost:8081');
-   conn.onopen = function(e) {
-      console.log("Connection established!");
-      const readyToSendData = {
-         request: 'request-table-connection',
-         data: {
-            table: table
-         },
-      }
-      conn.send(JSON.stringify(readyToSendData));
-   };
-
-   conn.onmessage = function(e) {
-      console.log(e.data);
    };
 </script>

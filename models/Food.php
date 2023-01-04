@@ -2,7 +2,7 @@
 
 class Food
 {
-   private $food_name;
+   private $name;
    private $price;
    private $description;
    private $image;
@@ -13,12 +13,12 @@ class Food
 
    public function getfoodName()
    {
-      return $this->food_name;
+      return $this->name;
    }
 
-   public function setFoodName($food_name)
+   public function setFoodName($name)
    {
-      $this->food_name = $food_name;
+      $this->name = $name;
    }
 
    public function getPrice()

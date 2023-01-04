@@ -16,12 +16,14 @@ include_once "./dao/FoodDaoImpl.php";
 include_once "./dao/TableConfigDaoImpl.php";
 include_once "./dao/CategoryDaoImpl.php";
 include_once "./dao/TableDaoImpl.php";
+include_once "./dao/DocumentDaoImpl.php";
 include_once "./models/Worker.php";
 include_once "./models/Role.php";
 include_once "./models/Food.php";
 include_once "./models/Category.php";
 include_once "./models/TableConfig.php";
 include_once "./models/Table.php";
+include_once "./models/Document.php";
 
 $menu = filter_input(INPUT_GET, 'menu');
 

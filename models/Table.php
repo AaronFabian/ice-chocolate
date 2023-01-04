@@ -36,9 +36,9 @@ class Table
       return $this->row;
    }
 
-   public function setRow($row)
+   public function setRow($row_p)
    {
-      $this->row = $row;
+      $this->row = $row_p;
    }
 
    public function getColumn()
@@ -46,9 +46,9 @@ class Table
       return $this->column;
    }
 
-   public function setColumn($column)
+   public function setColumn($column_p)
    {
-      $this->column = $column;
+      $this->column = $column_p;
    }
 
    public function getFloor()

@@ -8,8 +8,10 @@ include_once "./utils/Broadcast.php";
 
 include_once "./controller/TableController.php";
 include_once "./dao/TableDaoImpl.php";
+include_once "./dao/DocumentDaoImpl.php";
 include_once "./models/Table.php";
 include_once "./models/TableConfig.php";
+include_once "./models/Document.php";
 
 use Broadcast;
 use Ratchet\MessageComponentInterface;
@@ -23,11 +25,13 @@ class Chat implements MessageComponentInterface
 
    protected $user;
    protected $table;
+   protected $printer;
 
    public function __construct()
    {
       $this->user = [];
       $this->table = [];
+      $this->printer = [];
       $this->tableController = new TableController();
       echo "listening on port 8081...\n";
    }
@@ -56,19 +60,34 @@ class Chat implements MessageComponentInterface
 
       /////////////////////////////////////
       ////// Routes
-      if ($type === 'request') :
+      if ($type === 'get') :
          switch ($category) {
             case 'connection':
-               $this->table[$from->resourceId] = $from;
+               $this->table[$from->resourceId] = $from; // assign
                $tableController = new TableController();
                $tableController->routeTableConnection($data, $from->resourceId);
-               Broadcast::broadcastTable($from, $this->table, $msg);
+               Broadcast::personalCast($from, 'ok');
+               break;
+            case 'staffconnection':
                break;
             default:
-               echo 'Error : category <on request>';
+               echo 'Route Err : category <on get>';
                break;
          }
       elseif ($type === 'post') :
+         switch ($category) {
+            case 'orderfood':
+               $tableController = new TableController();
+               $status = $tableController->postFood($data, $from->resourceId);
+               if ($status)
+                  Broadcast::tellStaff($this->printer, $data);
+               else
+                  echo "orderfood fail :( <on post>";
+               break;
+            default:
+               echo 'Route Err : category <on post>';
+               break;
+         }
 
       elseif ($type === 'update') :
 
@@ -81,10 +100,9 @@ class Chat implements MessageComponentInterface
 
    public function onClose(ConnectionInterface $conn)
    {
-      // The connection is closed, remove it, as we can no longer send it messages
       if (isset($this->table[$conn->resourceId])) {
          $tableController = new TableController();
-         $tableController->disconnectTable($conn->resourceId);
+         $receipt = $tableController->disconnectTable($conn->resourceId);
       }
 
       unset($this->user[$conn->resourceId]);

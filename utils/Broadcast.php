@@ -2,13 +2,24 @@
 
 class Broadcast
 {
-   public static function broadcastTable($from, array $tablesArr, $msg)
+   public static function broadcastTable($from, $tableArr, $msg)
    {
       $from->send(json_encode(['ok' => $msg]));
-      foreach ($tablesArr as $table) {
+      foreach ($tableArr as $table) {
          if ($table !== $from) {
             $table->send(['ok' => $msg]);
          }
       }
+   }
+
+   public static function personalCast($from, $msg)
+   {
+      $from->send(json_encode(['connection' => $msg]));
+   }
+
+   public static function tellStaff($printerArr, $msg)
+   {
+      foreach ($printerArr as $printer)
+         $printer->send(json_encode($msg));
    }
 }

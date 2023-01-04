@@ -6,12 +6,14 @@ class TableDaoImpl
    {
       $status = 0;
       $link = PDOUtil::createConnection();
-
-      $query = "INSERT INTO japan_restaurant.table (number, floor, connection_id) VALUES (?,?,?)";
+      $query = "INSERT INTO japan_restaurant.table (number, floor, row, connection_id, client_in_at, `column`) VALUES (?, ?, ?, ?, ?, ?)";
       $stmt = $link->prepare($query);
       $stmt->bindValue(1, $table->getNumber());
       $stmt->bindValue(2, $table->getFloor());
-      $stmt->bindValue(3, $table->getConnectionId());
+      $stmt->bindValue(3, $table->getRow());
+      $stmt->bindValue(4, $table->getConnectionId());
+      $stmt->bindValue(5, $table->getClientInAt());
+      $stmt->bindValue(6, $table->getColumn());
 
       try {
          $link->beginTransaction();
@@ -25,6 +27,7 @@ class TableDaoImpl
          $link = null;
          return $status;
       } catch (PDOException $error) {
+         var_dump($error->errorInfo);
          return $status;
       }
    }
@@ -50,7 +53,10 @@ class TableDaoImpl
          $link = null;
          return $status;
       } catch (PDOException $error) {
+         var_dump($error);
          return $status;
       }
    }
 }
+
+// TODO:: WEIRD why ``

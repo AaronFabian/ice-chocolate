@@ -33,7 +33,7 @@ class FoodDaoImpl
    {
       $link = PDOUtil::createConnection();
 
-      $query = "SELECT COUNT(food_name) AS total_food, food_category FROM food GROUP BY food_category DESC";
+      $query = "SELECT COUNT(name) AS total_food, food_category FROM food GROUP BY food_category DESC";
       $stmt = $link->prepare($query);
       $stmt->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Food');
       $stmt->execute();
@@ -46,7 +46,7 @@ class FoodDaoImpl
    {
       $link = PDOUtil::createConnection();
 
-      $query = "SELECT food_name FROM food WHERE food_category= ? ORDER BY food_name ASC";
+      $query = "SELECT name FROM food WHERE food_category= ? ORDER BY name ASC";
       $stmt = $link->prepare($query);
       $stmt->bindParam(1, $category);
       $stmt->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Food');
@@ -62,7 +62,7 @@ class FoodDaoImpl
       $link = PDOUtil::createConnection();
 
 
-      $query = "INSERT INTO japan_restaurant.food (food_name, food_category, price, description, image) VALUES (?,?,?,?,?)";
+      $query = "INSERT INTO japan_restaurant.food (name, food_category, price, description, image) VALUES (?,?,?,?,?)";
       $stmt = $link->prepare($query);
       $stmt->bindValue(1, $food->getfoodName());
       $stmt->bindValue(2, $food->getCategory());
@@ -87,7 +87,7 @@ class FoodDaoImpl
       $status = 0;
       $link = PDOUtil::createConnection();
 
-      $query = "UPDATE japan_restaurant.food SET food_name= ?,food_category= ?, price= ?, image= ?  ,description= ? WHERE (food_name = ?)";
+      $query = "UPDATE japan_restaurant.food SET name= ?,food_category= ?, price= ?, image= ?  ,description= ? WHERE (name = ?)";
       $stmt = $link->prepare($query);
       $stmt->bindValue(1, $food->getfoodName());
       $stmt->bindValue(2, $food->getCategory());
