@@ -11,6 +11,7 @@ include_once "./controller/ClientController.php";
 include_once "./controller/SettingController.php";
 include_once "./controller/ResultController.php";
 include_once "./controller/TableController.php";
+include_once "./controller/PrinterController.php";
 include_once "./dao/WorkerDaoImpl.php";
 include_once "./dao/FoodDaoImpl.php";
 include_once "./dao/TableConfigDaoImpl.php";
@@ -74,7 +75,8 @@ if (!$menu) $menu = '';
                      gradient_one: 'rgba(147, 26, 222, 0.83)',
                      gradient_two: 'rgba(28, 206, 234, 0.82)',
                      gradient_three: '#7EE8FA',
-                     gradient_four: '#EEC0C6'
+                     gradient_four: '#EEC0C6',
+                     border_seperator: 'rgba(195,202,216,.5)'
                   },
                },
             },

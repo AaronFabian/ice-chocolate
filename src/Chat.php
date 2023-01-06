@@ -7,6 +7,7 @@ include_once "./utils/PDOUtil.php";
 include_once "./utils/Broadcast.php";
 
 include_once "./controller/TableController.php";
+include_once "./controller/PrinterController.php";
 include_once "./dao/TableDaoImpl.php";
 include_once "./dao/DocumentDaoImpl.php";
 include_once "./models/Table.php";
@@ -14,6 +15,7 @@ include_once "./models/TableConfig.php";
 include_once "./models/Document.php";
 
 use Broadcast;
+use PrinterController;
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
 use TableController;
@@ -47,13 +49,7 @@ class Chat implements MessageComponentInterface
    public function onMessage(ConnectionInterface $from, $msg)
    {
       $numRecv = count($this->user) - 1;
-      echo sprintf(
-         'Connection %d sending message "%s" to %d other connection%s' . "\n",
-         $from->resourceId,
-         $msg,
-         $numRecv,
-         $numRecv == 1 ? '' : 's'
-      );
+      echo "Connection $from->resourceId connected with $numRecv connection";
       $json = json_decode($msg);
       $data = $json->data;
       [$type, $user, $category] = explode('-', $json->request);
@@ -69,6 +65,10 @@ class Chat implements MessageComponentInterface
                Broadcast::personalCast($from, 'ok');
                break;
             case 'staffconnection':
+               break;
+            case 'printerconnection':
+               $this->printer[$from->resourceId] = $from;
+               Broadcast::personalCast($from, 'ok');
                break;
             default:
                echo 'Route Err : category <on get>';
@@ -88,7 +88,6 @@ class Chat implements MessageComponentInterface
                echo 'Route Err : category <on post>';
                break;
          }
-
       elseif ($type === 'update') :
 
       elseif ($type === 'delete') :
@@ -100,14 +99,23 @@ class Chat implements MessageComponentInterface
 
    public function onClose(ConnectionInterface $conn)
    {
-      if (isset($this->table[$conn->resourceId])) {
+      $id = $conn->resourceId;
+
+      if (isset($this->table[$id])) {
          $tableController = new TableController();
-         $receipt = $tableController->disconnectTable($conn->resourceId);
+         $receipt = $tableController->disconnectTable($id);
+         unset($this->table[$id]);
       }
 
-      unset($this->user[$conn->resourceId]);
+      if (isset($this->printer[$id])) {
+         $printerController = new PrinterController();
+         $feedback = $printerController->disconnectPrinter($id);
+         unset($this->table[$id]);
+      }
 
-      echo "Connection {$conn->resourceId} has disconnected\n";
+      unset($this->user[$id]);
+
+      echo "Connection {$id} has disconnected\n";
    }
 
    public function onError(ConnectionInterface $conn, \Exception $e)

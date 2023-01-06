@@ -145,7 +145,7 @@
             <h2 class="mb-8 text-6xl font-semibold text-center text-white">
                Printer
             </h2>
-            <form method="POST" action="">
+            <form method="POST" action="?menu=printer-view">
                <div class="flex flex-col items-center">
                   <label class="block">
                      <input class="px-2 py-2 mb-3 rounded-lg border-slate-200 placeholder-slate-400 contrast-more:border-slate-400 contrast-more:placeholder-slate-500" placeholder="Printer number" name="printerNumber" />

@@ -528,14 +528,14 @@
       const food = btnAdd.dataset.food;
 
       if (food in orderedMenu) {
-         orderedMenu[food]++;
+         orderedMenu[food][0]++;
          const elementToIncrease = document.querySelector(
             `.item-order[data-key="${food}"]`
          );
          elementToIncrease.querySelector('.food-quantity').value++;
       } else {
-         orderedMenu[food] = 1;
          const imgSrc = btnAdd.dataset.src;
+         orderedMenu[food] = [1, imgSrc];
 
          containerFoodModal.insertAdjacentHTML(
             'beforeend',
@@ -560,7 +560,7 @@
 
       if (command === 'decrease' && inpSelectedEl.value > 0) {
          inpSelectedEl.value--;
-         orderedMenu[key]--;
+         orderedMenu[key][0]--;
          if (orderedMenu[key] === 0) {
             delete orderedMenu[key];
             selected.classList.add('visibility-hidden');
@@ -570,7 +570,7 @@
          }
          audio.decreaseSound.play();
       } else if (command === 'add') {
-         orderedMenu[selected.dataset.key]++;
+         orderedMenu[selected.dataset.key][0]++;
          inpSelectedEl.value++;
          audio.addSound.play();
       } else if (command === 'delete') {

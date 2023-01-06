@@ -31,7 +31,6 @@ class TableController
    {
       // TODO: summary status nonfunction
       $summaryStatus = $this->documentDaoImpl->fetchSummary($id);
-      var_dump($summaryStatus);
       $deleteDocument = $this->documentDaoImpl->deleteDocument($id);
       $status = $this->tableDaoImpl->deleteTable($id);
 
@@ -51,7 +50,7 @@ class TableController
       $newDocument = new Document();
       $newDocument->setWorkerId($data->connectedId);
       $newDocument->setTableConnectionId($tableId);
-      foreach ($data->menuList as $key => $quantity) {
+      foreach ($data->menuList as $key => [$quantity, $src]) {
          $newDocument->setFoodName($key);
          $newDocument->setQuantities($quantity);
          $insertStatus = $this->documentDaoImpl->insertNewDocument($newDocument);
