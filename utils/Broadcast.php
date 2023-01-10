@@ -22,4 +22,14 @@ class Broadcast
       foreach ($printerArr as $printer)
          $printer->send(json_encode(['menu' => $msg, 'ok' => true]));
    }
+
+   public static function errorPersonalCast($from, $msg)
+   {
+      $from->send(json_encode(['error' => $msg]));
+   }
+
+   public static function isOk($from)
+   {
+      $from->send(json_encode(['success' => true]));
+   }
 }

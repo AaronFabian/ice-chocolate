@@ -95,19 +95,18 @@ class Chat implements MessageComponentInterface
             case 'stafforderfood':
                $tableController = new TableController();
                $status = $tableController->staffPostFood($data, $from->resourceId);
-               if ($status)
+               if ($status) {
                   Broadcast::tellStaff($this->printer, $data);
-               else
+                  Broadcast::isOk($from);
+               } else {
+                  Broadcast::errorPersonalCast($from, 'err-number');
                   echo "orderfood fail :( <on post>\n";
+               }
                break;
             default:
-               echo 'Route Err : category <on post>';
+               echo "Route Err : category <on post>\n";
                break;
          }
-      elseif ($type === 'update') :
-
-      elseif ($type === 'delete') :
-
       else :
          echo "error : type\n";
       endif;

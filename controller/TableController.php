@@ -83,7 +83,7 @@ class TableController
          $tableId = $isTable->getConnectionId();
          return $this->postFood($data, $tableId);
       } else {
-         echo "fail to insert document\n";
+         echo "fail to insert document. table not found !\n";
          return 0;
       }
    }

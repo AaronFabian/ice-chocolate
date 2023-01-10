@@ -740,16 +740,16 @@
             console.log(orderedMenu);
          });
 
+         const htmlHelper = (condition, message) => {
+            return `<p class="text-xl font-medium text-${condition}">
+                        ${message}
+                     </p>`;
+         };
+
          btnSendFinal.addEventListener('click', function() {
             const seat = Number(inpSeatNumber.innerText) ?
                inpSeatNumber.innerText :
                false;
-
-            const htmlHelper = (condition, message) => {
-               return `<p class="text-xl font-medium text-${condition}">
-                        ${message}
-                     </p>`;
-            };
 
             finalNotif.innerHTML = '';
             if (!seat) {
@@ -766,15 +766,14 @@
                   },
                };
 
-               orderedMenu = {};
-               inpSeatNumber.innerText = '-';
-               inpTable.value = '';
-               finalNotif.innerHTML = '';
-               containerSlider.style.transform = 'translate(0)';
+               // orderedMenu = {};
+               // inpSeatNumber.innerText = '-';
+               // inpTable.value = '';
+               // finalNotif.innerHTML = '';
+               // containerSlider.style.transform = 'translate(0)';
 
                conn.send(JSON.stringify(readyToSendData));
                console.log(readyToSendData);
-               alert('Food delivered !');
             }
          });
 
@@ -839,6 +838,18 @@
          btnDecreaseQuantity.onclick = () => inpFoodsQuantity.innerText--;
 
          conn.onmessage = function(e) {
-            console.log(JSON.parse(e.data));
+            const msg = JSON.parse(e.data);
+            console.log(msg);
+
+            if (msg.error) {
+               finalNotif.insertAdjacentHTML('beforeend', htmlHelper('danger', 'Error : Table not found !'));
+            } else if (msg.success) {
+               orderedMenu = {};
+               inpSeatNumber.innerText = '-';
+               inpTable.value = '';
+               finalNotif.innerHTML = '';
+               containerSlider.style.transform = 'translate(0)';
+               alert('food delivered');
+            }
          };
       </script>
