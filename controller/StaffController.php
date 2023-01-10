@@ -28,4 +28,12 @@ class StaffController
          exit;
       endif;
    }
+
+   public function confirmConnection(stdClass $data)
+   {
+      $staffId = $data->staffId;
+      $status = $this->workerDaoImpl->fetchWorkerWorkerId($staffId);
+
+      echo $status ? "staff Id: $staffId confirmed ok \xe2\x9c\xa8\n"  : "staff unknown !\n";
+   }
 }

@@ -133,6 +133,16 @@ class Document
       $this->appear = $appear;
    }
 
+   public function getTable()
+   {
+      return $this->table;
+   }
+
+   public function setTable($table)
+   {
+      $this->table = $table;
+   }
+
    public function __set($name, $value)
    {
       if (!isset($this->table)) {

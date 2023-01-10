@@ -39,7 +39,7 @@
       opacity: .5;
    }
 
-   .item-nav.active {
+   .item-nav.active-it {
       background-color: rgba(255, 255, 255, .4);
       opacity: 1;
    }
@@ -60,16 +60,14 @@
             <li></li>
          </ul>
       </nav>
+      <!-- !!! -->
       <nav class="h-8 bg-main drop-shadow-xl">
          <ul class="flex items-center w-11/12 mx-auto max-w-[370px] h-8 justify-center leading-7 navbar-container">
-            <li class="w-16 h-8 text-center text-white bg-center active item-nav">
+            <li class="w-16 h-8 text-center text-white bg-center active item-nav active-it">
                Default
             </li>
             <li class="w-16 h-8 text-center text-white item-nav">
                History
-            </li>
-            <li class="w-16 h-8 text-center text-white item-nav">
-               Total
             </li>
             <!-- active : {background-color: rgba(255,255,255,0.4)} -->
             <!-- non: {opacity: 50} -->
@@ -78,18 +76,20 @@
    </div>
    <div class="h-16 seperator"></div>
    <section class="w-11/12 relative mx-auto h-fit mt-12 pb-2 bg-white min-h-[30rem] drop-shadow-xl pt-2 max-w-[640px]">
-      <h3 class="w-4/5 mx-auto text-xs font-medium">Menu</h3>
-      <div class="container-script">
-         <!-- Insert here -->
+      <div class="wrapper-script">
+         <h3 class="w-4/5 mx-auto text-xs font-medium">Menu</h3>
+         <div class="container-script">
+            <!-- Insert here -->
+         </div>
       </div>
 
-      <!-- <div class="absolute left-0 z-20 w-full top-2 h-fit">
+      <div class="absolute left-0 z-20 w-full pt-2 bg-white top-2 h-fit visibility-hidden wrapper-history">
          <h3 class="w-4/5 mx-auto text-xs font-medium ">History</h3>
-         <div class="container-history">
+         <div class="container-history ">
 
 
          </div>
-      </div> -->
+      </div>
    </section>
 
    <footer class="w-full h-10 mt-8 bg-main">
@@ -138,19 +138,22 @@
 
    const navbarContainer = document.querySelector('.navbar-container');
    const containerScript = document.querySelector('.container-script');
+   const wrapperScript = document.querySelector('.wrapper-script');
+   const wrapperHistory = document.querySelector('.wrapper-history');
    const timeUpdate = document.querySelector('.time-update');
-   // const containerHistory = document.querySelector('.container-history');
+   const containerHistory = document.querySelector('.container-history');
    const itemNav = document.querySelectorAll('.item-nav');
 
    const htmlList = function(sentBy, table, reqFood) {
       let markup = '';
 
       for (let [name, [quantity, src]] of Object.entries(reqFood)) {
+         const datenow = 'id' + (new Date()).getTime() + name;
          markup += `
             <div class="flex flex-row w-4/5 h-20 mx-auto my-2 duration-500 border-b border-border_seperator order-item">
                   <div class="flex items-center justify-center w-1/4 gap-2">
-                     <input type="checkbox" name="${'id' + (new Date()).getTime()}" id="${'id' + (new Date()).getTime()}" class="inline-block item-list" />
-                     <label for="${'id' + (new Date()).getTime()}" class="inline-block h-12 pt-1 overflow-hidden bg-cover sw-14 food-preview"><img src="${src}" alt="${name}" class="inline-block mx-auto scale-125" /></label>
+                     <input type="checkbox" name="${datenow}" id="${datenow}" class="inline-block item-list" />
+                     <label for="${datenow}" class="inline-block h-12 pt-1 overflow-hidden bg-cover sw-14 food-preview"><img src="${src}" alt="${name}" class="inline-block mx-auto scale-125" /></label>
                   </div>
                   <div class="flex flex-col pl-3 content w-[65%] items-start justify-center">
                      <h3 class="text-xs text-gray_dark">
@@ -169,18 +172,17 @@
                      <small>by :<span>${sentBy}</span></small>
                   </div>
                </div>
-         `
+         `;
       }
 
       return markup;
    }
 
    navbarContainer.addEventListener('click', function(el) {
-      const selected = el.target.closest('.item-nav');
-      if (!selected) return;
+      itemNav.forEach(el => el.classList.toggle('active-it'));
 
-      itemNav.forEach(el => el.classList.remove('active'));
-      selected.classList.add('active');
+      wrapperHistory.classList.toggle('visibility-hidden');
+      wrapperScript.classList.toggle('visibility-hidden');
    })
 
    containerScript.addEventListener('click', function(el) {
@@ -205,7 +207,7 @@
          const reqFood = res.menu.menuList;
          const html = htmlList(sentBy, table, reqFood);
 
-         // containerHistory.insertAdjacentHTML('beforeend', html);
+         containerHistory.insertAdjacentHTML('beforeend', html);
          containerScript.insertAdjacentHTML('beforeend', html);
          timeUpdate.innerText = `${date.getHours()} : ${date.getMinutes()} ${date.getHours() > 12 ? 'PM' : 'AM'}`;
          audio.notif.play();

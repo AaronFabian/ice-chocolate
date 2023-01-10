@@ -46,7 +46,7 @@ class FoodDaoImpl
    {
       $link = PDOUtil::createConnection();
 
-      $query = "SELECT name FROM food WHERE food_category= ? ORDER BY name ASC";
+      $query = "SELECT name, image FROM food WHERE food_category= ? ORDER BY name ASC";
       $stmt = $link->prepare($query);
       $stmt->bindParam(1, $category);
       $stmt->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Food');

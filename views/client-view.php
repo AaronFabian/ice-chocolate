@@ -521,6 +521,7 @@
       audio.changeCategory.play();
    });
 
+   // [foodname, imagesrc] !!
    containerFoodList.addEventListener('click', function(el) {
       const btnAdd = el.target.closest('.button-add');
       if (!btnAdd) return;
@@ -561,7 +562,7 @@
       if (command === 'decrease' && inpSelectedEl.value > 0) {
          inpSelectedEl.value--;
          orderedMenu[key][0]--;
-         if (orderedMenu[key] === 0) {
+         if (orderedMenu[key][0] === 0) {
             delete orderedMenu[key];
             selected.classList.add('visibility-hidden');
             setTimeout(() => {
@@ -570,11 +571,11 @@
          }
          audio.decreaseSound.play();
       } else if (command === 'add') {
-         orderedMenu[selected.dataset.key][0]++;
+         orderedMenu[key][0]++;
          inpSelectedEl.value++;
          audio.addSound.play();
       } else if (command === 'delete') {
-         delete orderedMenu[selected.dataset.key];
+         delete orderedMenu[key];
          selected.classList.add('visibility-hidden');
          setTimeout(() => {
             selected.remove();
@@ -627,7 +628,7 @@
          behavior: 'smooth'
       });
 
-   // delete soon in production
+   // TODO: delete soon in production
    welcomeScreen.onclick = () => {
       lockscreenContainer.classList.add('active-client');
       setTimeout(() => {

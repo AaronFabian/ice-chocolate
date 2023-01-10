@@ -57,6 +57,20 @@ class TableDaoImpl
          return $status;
       }
    }
+
+   public function fetchTableInfo(Table $table)
+   {
+      $link = PDOUtil::createConnection();
+
+      $query = "SELECT connection_id FROM japan_restaurant.table WHERE number= ?";
+      $stmt = $link->prepare($query);
+      $stmt->bindValue(1, $table->getNumber());
+      $stmt->setFetchMode(PDO::FETCH_OBJ);
+      $stmt->execute();
+
+      $link = null;
+      return $stmt->fetchObject('Table');
+   }
 }
 
 // TODO:: WEIRD why ``

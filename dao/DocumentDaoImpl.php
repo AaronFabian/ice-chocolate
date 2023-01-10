@@ -70,4 +70,18 @@ class DocumentDaoImpl
          return $status;
       }
    }
+
+   public static function printDocument($id, $data)
+   {
+      $status = 0;
+      $filename = date('YmdHis') . $data[0]->getTable()->getNumber() . '.txt';
+      if ($f = fopen($filename, 'wb')) {
+         fwrite($f, json_encode($data));
+         fclose($f);
+
+         echo "Done";
+      }
+
+      return $status;
+   }
 }

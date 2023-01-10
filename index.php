@@ -45,7 +45,7 @@ if (!$menu) $menu = '';
    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css" />
    <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
 
-   <?php if ($menu !== 'table-view') : ?>
+   <?php if ($menu !== 'table-view' || 'staff-view' || 'printer-view' || 'setting-view') : ?>
       <script src="https://cdn.tailwindcss.com"></script>
       <script>
          tailwind.config = {

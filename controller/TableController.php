@@ -29,17 +29,17 @@ class TableController
 
    public function disconnectTable($id)
    {
-      // TODO: summary status nonfunction
-      $summaryStatus = $this->documentDaoImpl->fetchSummary($id);
+      $summaryReceipt = $this->documentDaoImpl->fetchSummary($id);
+      // DocumentDaoImpl::printDocument($id, $summaryReceipt);
       $deleteDocument = $this->documentDaoImpl->deleteDocument($id);
       $status = $this->tableDaoImpl->deleteTable($id);
 
       // logs
-      echo $summaryStatus ? "table id : $id summary ok\xe2\x9c\xa8\n" : "table id : $id summary error or data not found\n";
+      echo $summaryReceipt ? "table id : $id summary ok\xe2\x9c\xa8\n" : "table id : $id summary error or data not found\n";
       echo $deleteDocument ? "table id : $id delete document ok\xe2\x9c\xa8\n" : "table id : $id delete error\n";
       echo $status ? "table id : $id disconnected ok\xe2\x9c\xa8\n" : "table id : $id : disconnect error\n";
 
-      return $summaryStatus;
+      return $summaryReceipt;
    }
 
    public function postFood(stdClass $data, $tableId)
@@ -50,21 +50,41 @@ class TableController
       $newDocument = new Document();
       $newDocument->setWorkerId($data->connectedId);
       $newDocument->setTableConnectionId($tableId);
+
       foreach ($data->menuList as $key => [$quantity, $src]) {
          $newDocument->setFoodName($key);
          $newDocument->setQuantities($quantity);
          $insertStatus = $this->documentDaoImpl->insertNewDocument($newDocument);
+
          if ($insertStatus) {
             $status = 1;
-            ++$counter;
+            $counter++;
          } else {
             break;
          }
       }
 
       // logs
-      echo $status ? "table No : $seat all document inserted ok \xe2\x9c\xa8\n" : "table No : $seat insert document error at counter -> $counter";
+      echo $status ? "table No : $seat all($counter) document inserted ok \xe2\x9c\xa8\n" : "table No : $seat insert document error at counter -> $counter\n";
 
       return $status;
+   }
+
+   public function staffPostFood(stdClass $data, $staffId)
+   {
+      // check if table availble
+      $table = new Table();
+      $table->setNumber($data->seat);
+
+      $isTable = $this->tableDaoImpl->fetchTableInfo($table);
+
+      // if available use id from checked table to insert the ordered food
+      if ($isTable) {
+         $tableId = $isTable->getConnectionId();
+         return $this->postFood($data, $tableId);
+      } else {
+         echo "fail to insert document\n";
+         return 0;
+      }
    }
 }

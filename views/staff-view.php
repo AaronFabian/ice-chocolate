@@ -1,4 +1,19 @@
       <style>
+         .active-menu {
+            clip-path: polygon(0 -1%, 100% -1%, 100% 100%, 0% 100%) !important;
+         }
+
+         .unactive-menu {
+            clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+            transition: .2s;
+         }
+
+         .active-selected {
+            background-color: rgba(255, 252, 127, 0.4);
+            font-style: italic;
+            border-radius: 6px;
+         }
+
          th {
             text-align: left;
             padding-right: 110px;
@@ -160,7 +175,7 @@
                   <li class="font-medium text-gray_dark">
                      <h3>
                         Staff number :
-                        <span class="font-bold text-success"><?= $_SESSION['worker-id']; ?></span>
+                        <span class="font-bold text-success staff-id"><?= $_SESSION['worker-id']; ?></span>
                      </h3>
                   </li>
                   <li class="font-medium text-gray_dark">
@@ -185,10 +200,10 @@
                               <input class="py-2 px-[2px] text-2xl border-2 border-main placeholder-slate-400 contrast-more:border-slate-400 contrast-more:placeholder-slate-500 w-[96%]" id="inpTable" />
                            </label>
 
-                           <input id="new-seat" class="peer/draft" type="radio" name="status" />
+                           <input id="new-seat" class="peer/draft" type="radio" name="status" value="new" />
                            <label for="new-seat" class="peer-checked/draft:text-main">New table</label>
 
-                           <input id="Addition" class="peer/published" type="radio" name="status" checked />
+                           <input id="Addition" class="peer/published" type="radio" name="status" value="add" checked />
                            <label for="Addition" class="peer-checked/published:text-main">Addition</label>
 
                            <div class="hidden text-orange peer-checked/draft:block">
@@ -264,7 +279,7 @@
                         <div class="relative">
                            <select class="block w-full px-4 py-2 pr-8 leading-tight bg-gray-200 border border-gray-200 rounded appearance-none text-gray_dark focus:outline-main focus:bg-white focus:border-gray-500" id="inpOptions">
                               <option selected value="menu">Menu</option>
-                              <option value="delete">Delete</option>
+                              <option value="confirm">Confirm</option>
                               <option value="tableCheck">Table Check</option>
                               <option value="payment">Payment</option>
                               <option value="restart">restart</option>
@@ -276,47 +291,87 @@
                            </div>
                         </div>
                      </div>
-                     <div class="w-4/5 m-auto mt-4 bg-white h-[23rem] rounded-2xl relative option-screen">
-                        <div class="absolute top-0 z-20 w-11/12 mx-auto -translate-x-1/2 translate-y-4 left-1/2 bg-main rounded-2xl wrapper-deco">
-                           <!-- 6rem -->
-                           <!-- 21.2rem -->
-                           <p class="pt-2 text-2xl font-medium text-center duration-75 categories text-gray_dark select-menu active:text-white hover:opacity-80">
-                              Select Menu
-                           </p>
-                           <hr class="w-4/5 mx-auto" />
+                     <div class="w-4/5 m-auto mt-4 bg-white h-[23rem] rounded-2xl relative option-screen ">
+                        <div class="relative  h-[24rem] z-10 unactive-menu active-menu">
+                           <div class="absolute top-0 z-10 w-11/12 mx-auto -translate-x-1/2 translate-y-4 left-1/2 bg-main rounded-2xl wrapper-deco">
+                              <!-- 6rem -->
+                              <!-- 21.2rem -->
+                              <p class="pt-2 text-2xl font-medium text-center duration-75 categories text-gray_dark select-menu active:text-white hover:opacity-80">
+                                 Select Menu
+                              </p>
+                              <hr class="w-4/5 mx-auto" />
 
-                           <div class="pt-1 my-2 overflow-auto text-2xl font-medium text-center text-white categories-container group hover:opacity-80">
-                              <!-- 2.6rem -->
-                              <?php foreach ($category as $c) : ?>
-                                 <p class="w-4/5 m-auto menu-item active:text-orange hover:cursor-pointer hover:opacity-80" data-menu="<?= $c->getCategory()->getfoodCategory(); ?>">
-                                    <?= $c->getCategory()->getfoodCategory(); ?>
-                                 </p>
-                              <?php endforeach ?>
-                              <!-- <p class="w-4/5 py-2 m-auto menu-item active:text-orange hover:cursor-pointer hover:opacity-80" data-menu="Chinese food">
+                              <div class="pt-1 my-2 overflow-auto text-2xl font-medium text-center text-white categories-container group hover:opacity-80">
+                                 <!-- 2.6rem -->
+                                 <?php foreach ($category as $c) : ?>
+                                    <p class="w-4/5 m-auto menu-item active:text-orange hover:cursor-pointer hover:opacity-80" data-menu="<?= $c->getCategory()->getfoodCategory(); ?>">
+                                       <?= $c->getCategory()->getfoodCategory(); ?>
+                                    </p>
+                                 <?php endforeach ?>
+                                 <!-- <p class="w-4/5 py-2 m-auto menu-item active:text-orange hover:cursor-pointer hover:opacity-80" data-menu="Chinese food">
                                  Chinese food
                               </p> -->
+                              </div>
+                           </div>
+                           <div class="w-11/12 h-[13.9rem] mx-auto text-center translate-y-32 rounded-2xl">
+                              <div class="overflow-auto font-semibold translate-y-2 border rounded-tl-2xl rounded-tr-2xl border-main h-[8.8rem] text-gray_dark screen-foods-list">
+                                 <?php foreach ($defaultMenu as $d) : ?>
+                                    <p class="py-1" data-food="<?= $d->getFoodName(); ?>">
+                                       <?= $d->getFoodName(); ?>
+                                    </p>
+                                 <?php endforeach; ?>
+                              </div>
+                              <div class="absolute bottom-0 left-0 flex items-center w-full h-16 text-5xl bg-main rounded-bl-2xl rounded-br-2xl justify-evenly">
+                                 <button class="w-20 duration-75 h-14 bg-danger rounded-2xl active:translate-y-1" id="btnBackToPage1">
+                                    <img src="src/svg/back.svg" alt="" class="w-14 -translate-y-[3px] translate-x-[10px]" />
+                                 </button>
+                                 <button class="w-20 duration-75 h-14 bg-warning rounded-2xl active:translate-y-1" id="btnCheck">
+                                    <img src="src/svg/hamburger-menu.svg" alt="hamburger menu" class="w-14 -translate-y-[2px] translate-x-[12px] svg-ordered-list" />
+                                 </button>
+                                 <button class="w-20 duration-75 h-14 bg-success rounded-2xl active:translate-y-1" id="btnConfirm">
+                                    <img src="src/svg/ok.svg" alt="Ok button" class="w-14 -translate-y-[3px] translate-x-[10px]" />
+                                 </button>
+                              </div>
                            </div>
                         </div>
-                        <div class="w-11/12 h-[13.9rem] mx-auto text-center translate-y-32 rounded-2xl">
-                           <div class="overflow-auto font-semibold translate-y-2 border rounded-tl-2xl rounded-tr-2xl border-main h-[8.8rem] text-gray_dark screen-foods-list">
-                              <?php foreach ($defaultMenu as $d) : ?>
-                                 <p class="py-1" data-food="<?= $d->getFoodName(); ?>">
-                                    <?= $d->getFoodName(); ?>
-                                 </p>
-                              <?php endforeach; ?>
+
+                        <!-- start deleting menu -->
+                        <div class="  h-[24rem] unactive-menu  absolute top-0 z-20 p-2">
+                           <div class="h-fit w-[17.8rem] bg-main rounded-2xl p-1">
+                              <table class="w-full ml-3 text-lg text-white">
+                                 <thead>
+                                    <tr>
+                                       <th colspan="3" class="text-2xl">
+                                          Check Food
+                                       </th>
+                                    </tr>
+                                    <tr>
+                                       <th colspan="2" class="">Foods</th>
+                                       <th colspan="1">Quantity</th>
+                                    </tr>
+                                 </thead>
+                                 <tbody class="h-56 overflow-y-auto checked-menu w-[70%]">
+                                    <tr data-food="Horu Yakisoba" class="">
+                                       <td colspan="2">Horu yakisoba</td>
+                                       <td colspan="1" class="pl-16 text-center">3</td>
+                                    </tr>
+                                    <tr data-food="Horu Yakisoba">
+                                       <td colspan="2">Horu yakisoba</td>
+                                       <td colspan="1" class="pl-16 text-center">3</td>
+                                    </tr>
+                                 </tbody>
+                              </table>
                            </div>
-                           <div class="absolute bottom-0 left-0 flex items-center w-full h-16 text-5xl bg-main rounded-bl-2xl rounded-br-2xl justify-evenly">
-                              <button class="w-20 duration-75 h-14 bg-danger rounded-2xl active:translate-y-1" id="btnBackToPage1">
-                                 <img src="src/svg/back.svg" alt="" class="w-14 -translate-y-[3px] translate-x-[10px]" />
-                              </button>
-                              <button class="w-20 duration-75 h-14 bg-warning rounded-2xl active:translate-y-1" id="btnCheck">
-                                 <img src="src/svg/hamburger-menu.svg" alt="hamburger menu" class="w-14 -translate-y-[2px] translate-x-[12px] svg-ordered-list" />
-                              </button>
-                              <button class="w-20 duration-75 h-14 bg-success rounded-2xl active:translate-y-1" id="btnConfirm">
-                                 <img src="src/svg/ok.svg" alt="Ok button" class="w-14 -translate-y-[3px] translate-x-[10px]" />
-                              </button>
+                           <div class="flex items-center justify-center gap-2 pt-2 container-command">
+                              <button class="h-10 font-medium text-center text-white w-[7rem] bg-danger rounded-2xl" value="-">Decrease (-)</button>
+                              <button class="h-10 font-medium text-center text-white w-[7rem] bg-success rounded-2xl" value="+">Increase (+)</button>
                            </div>
                         </div>
+                        <!-- end deleting menu -->
+
+                        <!-- Start check table -->
+
+                        <!-- End check table -->
                      </div>
                   </div>
                </section>
@@ -410,15 +465,42 @@
          </div>
       </div>
       <!-- End Modal -->
+
       <script>
-         <?php
-         $floor = $defaultTableConfig->getFloor();
-         $row = $defaultTableConfig->getTotalRow();
-         $column = $defaultTableConfig->getTotalColumn();
-         ?>
+         //////////////////
+         // websocket file
+         const conn = new WebSocket('ws://localhost:8081');
+         conn.onopen = function(e) {
+            try {
+
+               console.log("Connection established!");
+               const readyToSendData = {
+                  request: 'get-staff-staffconnection',
+                  data: {
+                     staffId: document.querySelector('.staff-id').innerText
+                  },
+               }
+               conn.send(JSON.stringify(readyToSendData));
+
+            } catch (err) {
+               console.warn('error');
+            }
+         };
+      </script>
+
+      <?php
+      $floor = $defaultTableConfig->getFloor();
+      $row = $defaultTableConfig->getTotalRow();
+      $column = $defaultTableConfig->getTotalColumn();
+      ?>
+      <script>
+         const unactiveMenu = document.querySelectorAll('.unactive-menu');
+         const staffId = document.querySelector('.staff-id')
          const modalInputMenu = document.querySelector('.modal-input-menu');
          const containerSlider = document.querySelector('.slide-container');
+         const containerCommand = document.querySelector('.container-command');
          const selectMenu = document.querySelector('.select-menu');
+         const checkedMenu = document.querySelector('.checked-menu');
          const wrapperDeco = document.querySelector('.wrapper-deco');
          const svgOrderedList = document.querySelector('.svg-ordered-list');
          const categoriesContainer = document.querySelector(
@@ -432,6 +514,7 @@
          const screenOption = document.querySelector('.option-screen');
          const containerTable = document.querySelector('.keypad-table');
          const finalNotif = document.querySelector('.final-notif');
+         const inpRadioBtnSeat = document.getElementsByName('status');
          const inpList = document.getElementById('inpList');
          const inpFoodsQuantity = document.getElementById('foodsQuantity');
          const inpOptions = document.getElementById('inpOptions');
@@ -453,6 +536,8 @@
 
          let orderedMenu = {};
          let currentFloorView = 1;
+         let checked = null;
+         let checkedElement = null;
 
          //////////////////////////////////
          const gotoNextPage = function() {
@@ -470,12 +555,13 @@
             modalBg.classList.toggle('blurry-bg');
 
             inpFoodName.innerText = el.dataset.food;
+            inpFoodName.dataset.foodsrc = el.dataset.foodsrc;
             inpFoodsQuantity.innerText = 1;
          };
 
          const handleConfirmationOrderedMenu = function() {
             inpList.innerHTML = '';
-            for (const [food, quantity] of Object.entries(orderedMenu)) {
+            for (const [food, [quantity]] of Object.entries(orderedMenu)) {
                const markup = `<tr>
                                  <td colspan="2" class="inline-block w-48">${food}</td>
                                  <td colspan="1" class="text-center ">${quantity}</td>
@@ -484,8 +570,21 @@
             }
          };
 
+         const handleConfirm = function() {
+            checkedMenu.innerHTML = '';
+            for (const [food, [quantity]] of Object.entries(orderedMenu)) {
+               const markup = `<tr class="duration-200 item-tbody" data-item="${food}">
+                                    <td colspan="2" class="inline-block w-48">${food}</td>
+                                    <td colspan="1" class="text-center item-quantity">${quantity}</td>
+                                 </tr>`;
+               checkedMenu.insertAdjacentHTML('beforeend', markup);
+            }
+
+            console.log('confirm');
+         }
+
          //////////////////////////////////
-         // event listener
+         ////////////////// event listener
          class TableConfig {
             #tableBody = document.getElementById('tableBody');
             #maxRow;
@@ -530,7 +629,6 @@
          }
 
          // the default params got from php
-         let tableConfig = new TableConfig(<?= $row ?>, <?= $column ?>, <?= $floor ?>);
 
          class AjaxEvent {
             constructor() {
@@ -538,6 +636,7 @@
                floorMap.addEventListener('change', this.getFloorConfig.bind(this));
             }
 
+            // 01
             async getFloorConfig(e) {
                const reqFloor = e.target.value;
                const floorData = await this.fetchFloor(reqFloor);
@@ -549,7 +648,7 @@
                   column,
                   floor
                } = floorData;
-               new TableConfig(row, column, floor);
+               tableConfig = new TableConfig(row, column, floor);
                currentFloorView = floor;
             }
 
@@ -558,6 +657,7 @@
                   .then(res => res.json());
             }
 
+            // 02
             async getFood(e) {
                const foodItemEl = e.target.closest('.menu-item');
                if (!foodItemEl) return;
@@ -567,7 +667,10 @@
                   data
                } = await this.fetchFood(reqFood);
                screenFoodsList.innerHTML = '';
-               data.forEach(el => screenFoodsList.insertAdjacentHTML('beforeend', this.markup(el)));
+               data.forEach(el => {
+                  const [foodName, src] = el;
+                  screenFoodsList.insertAdjacentHTML('beforeend', this.markup(foodName, src))
+               });
             }
 
             fetchFood(req) {
@@ -575,11 +678,12 @@
                   .then(response => response.json());
             }
 
-            markup(el) {
-               return `<p class="py-1" data-food="${el}">${el}</p>`
+            markup(foodName, src) {
+               return `<p class="py-1" data-foodsrc="${src}" data-food="${foodName}">${foodName}</p>`
             }
          }
 
+         let tableConfig = new TableConfig(<?= $row ?>, <?= $column ?>, <?= $floor ?>);
          const ajax = new AjaxEvent();
 
          containerTable.addEventListener('click', function(e) {
@@ -595,21 +699,34 @@
          screenOption.addEventListener('click', function(e) {
             const selectedMenu = e.target.closest('p[data-food]');
 
-            if (selectedMenu) {
+            if (selectedMenu)
                handleInputMenu(selectedMenu);
-            }
          });
 
          inpOptions.addEventListener('change', function(e) {
-            console.log(e.target.value);
+            const selected = e.target.value;
+            unactiveMenu.forEach(el => el.classList.remove('active-menu'));
+
+            switch (selected) {
+               case 'confirm':
+                  unactiveMenu[1].classList.add('active-menu');
+                  handleConfirm();
+                  break;
+               default:
+                  unactiveMenu[0].classList.add('active-menu');
+                  console.log('ok');
+                  break;
+            }
          });
 
          btnConfirmQuantity.addEventListener('click', function() {
             const food = inpFoodName.innerText;
+            const imageSrc = inpFoodName.dataset.foodsrc;
+            console.log(inpFoodName);
             const quantity = Number(inpFoodsQuantity.innerText);
 
-            if (food in orderedMenu) orderedMenu[food] += quantity;
-            else orderedMenu[food] = quantity;
+            if (food in orderedMenu) orderedMenu[food][0] += quantity;
+            else orderedMenu[food] = [quantity, `./src/img/uploads/${imageSrc}`];
 
             modalInputMenu.classList.toggle('active');
             modalBg.classList.toggle('blurry-bg');
@@ -640,13 +757,14 @@
             } else if (Object.keys(orderedMenu).length === 0) {
                finalNotif.insertAdjacentHTML('beforeend', htmlHelper('warning', 'Warning : No food inputed !'));
             } else {
-               const readyToSendData = JSON.stringify({
-                  request: 'post-staff-orderfood',
+               const readyToSendData = {
+                  request: 'post-staff-stafforderfood',
                   data: {
+                     connectedId: staffId.innerText,
                      seat: seat,
                      menuList: orderedMenu,
                   },
-               });
+               };
 
                orderedMenu = {};
                inpSeatNumber.innerText = '-';
@@ -654,9 +772,44 @@
                finalNotif.innerHTML = '';
                containerSlider.style.transform = 'translate(0)';
 
-               alert('Food delivered !');
+               conn.send(JSON.stringify(readyToSendData));
                console.log(readyToSendData);
+               alert('Food delivered !');
             }
+         });
+
+         checkedMenu.addEventListener('click', function(el) {
+            const selected = el.target.closest('.item-tbody');
+            if (!selected) return;
+
+            const item = document.querySelectorAll('.item-tbody');
+            checkedElement = selected;
+            checked = selected.dataset.item;
+
+            item.forEach(el => el.classList.remove('active-selected'));
+            selected.classList.add('active-selected');
+
+         })
+
+         containerCommand.addEventListener('click', function(el) {
+            const button = el.target.closest('button');
+            if (!button || !checked) return;
+
+            const quantityEl = checkedElement.querySelector('.item-quantity');
+            const value = button.value;
+
+            if (value === '+') {
+               orderedMenu[checked][0]++;
+               quantityEl.innerText++;
+            } else if (value === '-') {
+               orderedMenu[checked][0]--;
+               quantityEl.innerText--;
+               if (orderedMenu[checked][0] <= 0) {
+                  delete orderedMenu[checked];
+                  checkedElement.remove();
+                  checked = null;
+               }
+            } else alert('error');
          });
 
          selectMenu.onclick = () => {
@@ -684,4 +837,8 @@
 
          btnIncreaseQuantity.onclick = () => inpFoodsQuantity.innerText++;
          btnDecreaseQuantity.onclick = () => inpFoodsQuantity.innerText--;
+
+         conn.onmessage = function(e) {
+            console.log(JSON.parse(e.data));
+         };
       </script>

@@ -8,33 +8,37 @@ include_once "./utils/Broadcast.php";
 
 include_once "./controller/TableController.php";
 include_once "./controller/PrinterController.php";
+include_once "./controller/StaffController.php";
 include_once "./dao/TableDaoImpl.php";
 include_once "./dao/DocumentDaoImpl.php";
+include_once "./dao/WorkerDaoImpl.php";
+include_once "./dao/FoodDaoImpl.php";
+include_once "./dao/TableConfigDaoImpl.php";
 include_once "./models/Table.php";
 include_once "./models/TableConfig.php";
 include_once "./models/Document.php";
+include_once "./models/Worker.php";
 
 use Broadcast;
 use PrinterController;
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
+use StaffController;
 use TableController;
 
 class Chat implements MessageComponentInterface
 {
-   private $tableController;
-
-
    protected $user;
    protected $table;
+   protected $staff;
    protected $printer;
 
    public function __construct()
    {
       $this->user = [];
       $this->table = [];
+      $this->staff = [];
       $this->printer = [];
-      $this->tableController = new TableController();
       echo "listening on port 8081...\n";
    }
 
@@ -49,7 +53,7 @@ class Chat implements MessageComponentInterface
    public function onMessage(ConnectionInterface $from, $msg)
    {
       $numRecv = count($this->user) - 1;
-      echo "Connection $from->resourceId connected with $numRecv connection";
+      echo "Connection $from->resourceId connected with $numRecv connection\n";
       $json = json_decode($msg);
       $data = $json->data;
       [$type, $user, $category] = explode('-', $json->request);
@@ -65,6 +69,10 @@ class Chat implements MessageComponentInterface
                Broadcast::personalCast($from, 'ok');
                break;
             case 'staffconnection':
+               $this->staff[$from->resourceId] = $from;
+               $staffController = new StaffController();
+               $staffController->confirmConnection($data);
+               Broadcast::personalCast($from, 'ok');
                break;
             case 'printerconnection':
                $this->printer[$from->resourceId] = $from;
@@ -83,6 +91,14 @@ class Chat implements MessageComponentInterface
                   Broadcast::tellStaff($this->printer, $data);
                else
                   echo "orderfood fail :( <on post>";
+               break;
+            case 'stafforderfood':
+               $tableController = new TableController();
+               $status = $tableController->staffPostFood($data, $from->resourceId);
+               if ($status)
+                  Broadcast::tellStaff($this->printer, $data);
+               else
+                  echo "orderfood fail :( <on post>\n";
                break;
             default:
                echo 'Route Err : category <on post>';
@@ -103,18 +119,21 @@ class Chat implements MessageComponentInterface
 
       if (isset($this->table[$id])) {
          $tableController = new TableController();
-         $receipt = $tableController->disconnectTable($id);
+         $tableController->disconnectTable($id);
+         unset($this->table[$id]);
+      }
+
+      if (isset($this->staff[$id])) {
          unset($this->table[$id]);
       }
 
       if (isset($this->printer[$id])) {
          $printerController = new PrinterController();
-         $feedback = $printerController->disconnectPrinter($id);
+         $printerController->disconnectPrinter($id);
          unset($this->table[$id]);
       }
 
       unset($this->user[$id]);
-
       echo "Connection {$id} has disconnected\n";
    }
 
