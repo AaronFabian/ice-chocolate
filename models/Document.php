@@ -11,9 +11,20 @@ class Document
 
    private $table;
 
+   private $order_at;
    private $quantity_out;
-   private $total_price;
    private $appear;
+   private $total_price;
+
+   public function getOrderAt()
+   {
+      return $this->order_at;
+   }
+
+   public function setOrderAt($order_at)
+   {
+      $this->order_at = $order_at;
+   }
 
    public function getDocumentId()
    {

@@ -625,12 +625,12 @@
       });
 
    // TODO: delete soon in production
-   // welcomeScreen.onclick = () => {
-   //    lockscreenContainer.classList.add('active-client');
-   //    setTimeout(() => {
-   //       lockscreenContainer.classList.add('hidden-it');
-   //    }, 500)
-   // };
+   welcomeScreen.onclick = () => {
+      lockscreenContainer.classList.add('active-client');
+      setTimeout(() => {
+         lockscreenContainer.classList.add('hidden-it');
+      }, 500)
+   };
 
    conn.onmessage = function(e) {
       const msg = JSON.parse(e.data);

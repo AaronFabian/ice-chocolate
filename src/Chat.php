@@ -9,15 +9,18 @@ include_once "./utils/Broadcast.php";
 include_once "./controller/TableController.php";
 include_once "./controller/PrinterController.php";
 include_once "./controller/StaffController.php";
+include_once "./controller/ResultController.php";
 include_once "./dao/TableDaoImpl.php";
 include_once "./dao/DocumentDaoImpl.php";
 include_once "./dao/WorkerDaoImpl.php";
 include_once "./dao/FoodDaoImpl.php";
 include_once "./dao/TableConfigDaoImpl.php";
+include_once "./dao/ResultDaoImpl.php";
 include_once "./models/Table.php";
 include_once "./models/TableConfig.php";
 include_once "./models/Document.php";
 include_once "./models/Worker.php";
+include_once "./models/Result.php";
 
 use Broadcast;
 use PrinterController;
@@ -58,8 +61,8 @@ class Chat implements MessageComponentInterface
       $data = $json->data;
       [$type, $user, $category] = explode('-', $json->request);
 
-      /////////////////////////////////////
-      ////// Routes
+      ///////////////////////
+      //////////////// Routes
       if ($type === 'get') :
          switch ($category) {
             case 'connection':
@@ -139,13 +142,13 @@ class Chat implements MessageComponentInterface
       }
 
       if (isset($this->staff[$id])) {
-         unset($this->table[$id]);
+         unset($this->staff[$id]);
       }
 
       if (isset($this->printer[$id])) {
          $printerController = new PrinterController();
          $printerController->disconnectPrinter($id);
-         unset($this->table[$id]);
+         unset($this->printer[$id]);
       }
 
       unset($this->user[$id]);

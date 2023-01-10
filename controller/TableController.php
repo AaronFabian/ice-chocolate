@@ -5,11 +5,13 @@ class TableController
 
    private $documentDaoImpl;
    private $tableDaoImpl;
+   private $resultDaoImpl;
 
    public function __construct()
    {
       $this->documentDaoImpl = new DocumentDaoImpl();
       $this->tableDaoImpl = new TableDaoImpl();
+      $this->resultDaoImpl = new ResultDaoImpl();
    }
 
    public function routeTableConnection(stdClass $data, $tableId)
@@ -29,13 +31,42 @@ class TableController
 
    public function disconnectTable($id)
    {
+      $containerData = [];
       $summaryReceipt = $this->documentDaoImpl->fetchSummary($id);
-      // DocumentDaoImpl::printDocument($id, $summaryReceipt);
+      if ($summaryReceipt) {
+         foreach ($summaryReceipt as $i => $s) {
+            if ($i === 0) {
+               $containerData['clientInAt'] = $s->getTable()->getClientInAt();
+               $containerData['number'] = $s->getTable()->getNumber();
+            }
+
+            $containerData['foodCollection'][] = [
+               'date' => $s->getDateCreated(),
+               'foodName' => $s->getFoodName(),
+               'quantityOut' => $s->getQuantityOut(),
+               'appear' => $s->getAppear(),
+               'price' => $s->getTotalPrice(),
+            ];
+
+            if (!isset($containerData['sumAllPrice'])) $containerData['sumAllPrice'] = 0;
+            $containerData['sumAllPrice'] += $s->getTotalPrice();
+         }
+
+         $newResult = new Result();
+         $newResult->setidResult(uniqid());
+         $newResult->setTotalPrice($containerData['sumAllPrice']);
+         $newResult->setClientInAt($containerData['clientInAt']);
+         $newResult->setTableNumber($containerData['number']);
+         $newResult->setAllFood(json_encode($containerData['foodCollection']));
+         $resultStatus = $this->resultDaoImpl->insertNewResult($newResult);
+      }
+
       $deleteDocument = $this->documentDaoImpl->deleteDocument($id);
       $status = $this->tableDaoImpl->deleteTable($id);
 
       // logs
       echo $summaryReceipt ? "table id : $id summary ok\xe2\x9c\xa8\n" : "table id : $id summary error or data not found\n";
+      echo $resultStatus ? "table id : $id result ok\xe2\x9c\xa8\n" : "table id : $id result error";
       echo $deleteDocument ? "table id : $id delete document ok\xe2\x9c\xa8\n" : "table id : $id delete error\n";
       echo $status ? "table id : $id disconnected ok\xe2\x9c\xa8\n" : "table id : $id : disconnect error\n";
 
