@@ -107,6 +107,22 @@ class Chat implements MessageComponentInterface
                echo "Route Err : category <on post>\n";
                break;
          }
+      elseif ($type === 'update') :
+         switch ($category) {
+            case 'opentable':
+               $tableController = new TableController();
+               $status = $tableController->updateOpenTable($data, $from->resourceId);
+               if ($status) {
+                  Broadcast::castTo($this->table, $status);
+                  Broadcast::isTableOk($from);
+               } else {
+                  Broadcast::errorTablePersonalCast($from, 'table not online');
+               }
+               break;
+            default:
+               echo "Route Err : Category <on update>\n";
+               break;
+         }
       else :
          echo "error : type\n";
       endif;

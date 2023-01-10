@@ -28,8 +28,23 @@ class Broadcast
       $from->send(json_encode(['error' => $msg]));
    }
 
+   public static function castTo($tableArr, $msg)
+   {
+      $tableArr[$msg]->send(json_encode(['table' => 'open confirmed']));
+   }
+
    public static function isOk($from)
    {
       $from->send(json_encode(['success' => true]));
+   }
+
+   public static function errorTablePersonalCast($from)
+   {
+      $from->send(json_encode(['tableErr' => 'error']));
+   }
+
+   public static function isTableOk($from)
+   {
+      $from->send(json_encode(['tableOk' => 'table open success']));
    }
 }

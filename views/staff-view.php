@@ -280,9 +280,9 @@
                            <select class="block w-full px-4 py-2 pr-8 leading-tight bg-gray-200 border border-gray-200 rounded appearance-none text-gray_dark focus:outline-main focus:bg-white focus:border-gray-500" id="inpOptions">
                               <option selected value="menu">Menu</option>
                               <option value="confirm">Confirm</option>
-                              <option value="tableCheck">Table Check</option>
+                              <option value="opentable">Open Table</option>
                               <option value="payment">Payment</option>
-                              <option value="restart">restart</option>
+                              <option value="safeprint">Safe Print</option>
                            </select>
                            <div class="absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 pointer-events-none">
                               <svg class="w-4 h-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -336,8 +336,8 @@
                         </div>
 
                         <!-- start deleting menu -->
-                        <div class="  h-[24rem] unactive-menu  absolute top-0 z-20 p-2">
-                           <div class="h-fit w-[17.8rem] bg-main rounded-2xl p-1">
+                        <div class="h-[24rem] w-full unactive-menu  absolute top-0 z-20 p-2">
+                           <div class="h-fit w-[17.8rem] bg-main rounded-2xl p-1 m-auto">
                               <table class="w-full ml-3 text-lg text-white">
                                  <thead>
                                     <tr>
@@ -369,9 +369,24 @@
                         </div>
                         <!-- end deleting menu -->
 
-                        <!-- Start check table -->
+                        <!-- Start open table -->
+                        <div class="w-full  h-[24rem] unactive-menu  absolute top-0 z-30 p-2">
+                           <div class="h-fit w-[17.8rem] bg-main rounded-t-2xl p-1 m-auto">
+                              <form class="w-4/5 max-w-sm m-auto">
+                                 <div class="flex items-center py-2 mb-1 border-b border-teal-500">
+                                    <input class="w-full px-2 mr-3 text-xl leading-tight text-white bg-transparent border-none appearance-none focus:outline-none" readonly type="text" aria-label="Full name" id="inpTableToOpen">
+                                    <button class="flex-shrink-0 px-2 py-1 text-sm text-white border-4 border-teal-500 rounded bg-success active:bg-gray" type="button" id="btnOpenTable" name="btnOpenTable">
+                                       Open
+                                    </button>
+                                 </div>
+                              </form>
+                           </div>
 
-                        <!-- End check table -->
+                           <div class="w-[17.8rem] mt-2 bg-main mx-auto p-1 rounded-b-2xl h-64">
+                              <p class="text-white">Notification : <br><span class="block notif-open-table text-danger"></span></p>
+                           </div>
+                        </div>
+                        <!-- End open table -->
                      </div>
                   </div>
                </section>
@@ -514,6 +529,7 @@
          const screenOption = document.querySelector('.option-screen');
          const containerTable = document.querySelector('.keypad-table');
          const finalNotif = document.querySelector('.final-notif');
+         const notifOpenTable = document.querySelector('.notif-open-table');
          const inpRadioBtnSeat = document.getElementsByName('status');
          const inpList = document.getElementById('inpList');
          const inpFoodsQuantity = document.getElementById('foodsQuantity');
@@ -521,6 +537,8 @@
          const inpSeatNumber = document.getElementById('seatNumber');
          const inpTable = document.getElementById('inpTable');
          const inpFoodName = document.getElementById('foodName');
+         const inpTableToOpen = document.getElementById('inpTableToOpen');
+         const btnOpenTable = document.getElementById('btnOpenTable');
          const btnSendFinal = document.getElementById('btnSendFinal');
          const btnBackToPage1 = document.getElementById('btnBackToPage1');
          const btnBackToPage2 = document.getElementById('btnBackToPage2');
@@ -544,6 +562,7 @@
             if (inpTable.value) {
                containerSlider.style.transform = 'translate(-100%)';
                inpSeatNumber.innerText = inpTable.value;
+               inpTableToOpen.value = inpTable.value;
             } else {
                containerSlider.style.transform = 'translate(-100%)';
                inpSeatNumber.innerText = '--no input--';
@@ -581,6 +600,10 @@
             }
 
             console.log('confirm');
+         }
+
+         const handleOpenTable = function() {
+            btnOpenTable
          }
 
          //////////////////////////////////
@@ -708,15 +731,31 @@
             unactiveMenu.forEach(el => el.classList.remove('active-menu'));
 
             switch (selected) {
+               case 'opentable':
+                  unactiveMenu[2].classList.add('active-menu');
+                  handleOpenTable();
+                  break;
                case 'confirm':
                   unactiveMenu[1].classList.add('active-menu');
                   handleConfirm();
                   break;
                default:
                   unactiveMenu[0].classList.add('active-menu');
-                  console.log('ok');
                   break;
             }
+         });
+
+         btnOpenTable.addEventListener('click', function(el) {
+            if (!inpTableToOpen.value) return;
+
+            const readyToSendData = {
+               request: 'update-staff-opentable',
+               data: {
+                  seat: inpTableToOpen.value,
+               }
+            }
+
+            conn.send(JSON.stringify(readyToSendData));
          });
 
          btnConfirmQuantity.addEventListener('click', function() {
@@ -765,12 +804,6 @@
                      menuList: orderedMenu,
                   },
                };
-
-               // orderedMenu = {};
-               // inpSeatNumber.innerText = '-';
-               // inpTable.value = '';
-               // finalNotif.innerHTML = '';
-               // containerSlider.style.transform = 'translate(0)';
 
                conn.send(JSON.stringify(readyToSendData));
                console.log(readyToSendData);
@@ -843,6 +876,15 @@
 
             if (msg.error) {
                finalNotif.insertAdjacentHTML('beforeend', htmlHelper('danger', 'Error : Table not found !'));
+            } else if (msg.tableErr) {
+               notifOpenTable.innerText = msg.tableErr;
+            } else if (msg.tableOk) {
+               notifOpenTable.innerText = '';
+               inpTable.value = '';
+               inpTableToOpen.value = '';
+               inpSeatNumber.innerText = '-';
+               containerSlider.style.transform = 'translate(0)';
+               alert(msg.tableOk);
             } else if (msg.success) {
                orderedMenu = {};
                inpSeatNumber.innerText = '-';

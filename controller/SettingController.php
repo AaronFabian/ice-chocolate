@@ -115,8 +115,8 @@ class SettingController
                switch ($btnSave) {
                   case 'save':
                      $food = new Food();
-                     $food->setFoodName($inpFoodName);
-                     $food->setCategory($inpCategory);
+                     $food->setFoodName(ucfirst($inpFoodName));
+                     $food->setCategory(ucfirst($inpCategory));
                      $food->setPrice($inpPrice);
                      $food->setDescription($inpDescription);
                      $food->setImage($image);
@@ -127,8 +127,8 @@ class SettingController
                      break;
                   case 'add':
                      $newFood = new Food();
-                     $newFood->setFoodName($inpFoodName);
-                     $newFood->setCategory($inpCategory);
+                     $newFood->setFoodName(ucfirst($inpFoodName));
+                     $newFood->setCategory(ucfirst($inpCategory));
                      $newFood->setPrice($inpPrice);
                      $newFood->setDescription($inpDescription);
                      $newFood->setImage($image);

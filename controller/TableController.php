@@ -87,4 +87,15 @@ class TableController
          return 0;
       }
    }
+
+   public function updateOpenTable(stdClass $data, $staffId)
+   {
+      $table = new Table();
+      $table->setNumber($data->seat);
+
+      $isTableOnline = $this->tableDaoImpl->fetchTableInfo($table);
+
+      if ($isTableOnline) return $isTableOnline->getConnectionId();
+      else return 0;
+   }
 }

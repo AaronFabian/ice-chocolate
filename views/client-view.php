@@ -423,10 +423,6 @@
          console.warn('error');
       }
    };
-
-   conn.onmessage = function(e) {
-      console.log(JSON.parse(e.data));
-   };
 </script>
 
 <script>
@@ -629,10 +625,22 @@
       });
 
    // TODO: delete soon in production
-   welcomeScreen.onclick = () => {
-      lockscreenContainer.classList.add('active-client');
-      setTimeout(() => {
-         lockscreenContainer.classList.add('hidden-it');
-      }, 500)
+   // welcomeScreen.onclick = () => {
+   //    lockscreenContainer.classList.add('active-client');
+   //    setTimeout(() => {
+   //       lockscreenContainer.classList.add('hidden-it');
+   //    }, 500)
+   // };
+
+   conn.onmessage = function(e) {
+      const msg = JSON.parse(e.data);
+      console.log(msg);
+
+      if (msg.table) {
+         lockscreenContainer.classList.add('active-client');
+         setTimeout(() => {
+            lockscreenContainer.classList.add('hidden-it');
+         }, 500)
+      }
    };
 </script>
