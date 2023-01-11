@@ -7,7 +7,75 @@ class Result
    private $client_in_at;
    private $client_out_at;
    private $table_number;
-   private $all_food; // will containt large string of ordered food
+   private $all_food; // will containt large string of ordered food (JSON)
+   private $dayname;
+
+   private $year;
+   private $month;
+   private $date;
+   private $day;
+
+   private $result;
+
+   public function getResult()
+   {
+      return $this->result;
+   }
+
+   public function setResult($result)
+   {
+      $this->result = $result;
+   }
+
+   public function getDayname()
+   {
+      return $this->dayname;
+   }
+
+   public function setDayname($dayname)
+   {
+      $this->dayname = $dayname;
+   }
+
+   public function getDay()
+   {
+      return $this->day;
+   }
+
+   public function setDay($day)
+   {
+      $this->day = $day;
+   }
+
+   public function getDate()
+   {
+      return $this->date;
+   }
+
+   public function setDate($date)
+   {
+      $this->date = $date;
+   }
+
+   public function getMonth()
+   {
+      return $this->month;
+   }
+
+   public function setMonth($month)
+   {
+      $this->month = $month;
+   }
+
+   public function getYear()
+   {
+      return $this->year;
+   }
+
+   public function setYear($year)
+   {
+      $this->year = $year;
+   }
 
    public function getIdResult()
    {

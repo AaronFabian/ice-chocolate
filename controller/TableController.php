@@ -33,6 +33,7 @@ class TableController
    {
       $containerData = [];
       $summaryReceipt = $this->documentDaoImpl->fetchSummary($id);
+      $resultStatus = false;
       if ($summaryReceipt) {
          foreach ($summaryReceipt as $i => $s) {
             if ($i === 0) {
@@ -66,7 +67,7 @@ class TableController
 
       // logs
       echo $summaryReceipt ? "table id : $id summary ok\xe2\x9c\xa8\n" : "table id : $id summary error or data not found\n";
-      echo $resultStatus ? "table id : $id result ok\xe2\x9c\xa8\n" : "table id : $id result error";
+      echo $resultStatus ? "table id : $id result ok\xe2\x9c\xa8\n" : "table id : $id result error will not create result summary\n";
       echo $deleteDocument ? "table id : $id delete document ok\xe2\x9c\xa8\n" : "table id : $id delete error\n";
       echo $status ? "table id : $id disconnected ok\xe2\x9c\xa8\n" : "table id : $id : disconnect error\n";
 
