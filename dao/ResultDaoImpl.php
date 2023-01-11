@@ -6,6 +6,7 @@ class ResultDaoImpl
    {
       $link = PDOUtil::createConnection();
 
+      // TODO: pagination and category feauture not yet working !
       $query = "SELECT id_result, total_price, client_in_at, client_out_at, table_number,(SELECT SUM(total_price) FROM result) AS result FROM japan_restaurant.result ORDER BY client_out_at DESC LIMIT 10 OFFSET 0;";
       $stmt = $link->prepare($query);
       $stmt->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Result');
@@ -17,7 +18,16 @@ class ResultDaoImpl
 
    public function fetchDetailResult($id)
    {
-      # code...
+      $link = PDOUtil::createConnection();
+
+      $query = "SELECT * FROM japan_restaurant.result WHERE id_result= ?";
+      $stmt = $link->prepare($query);
+      $stmt->bindParam(1, $id);
+      $stmt->setFetchMode(PDO::FETCH_OBJ);
+      $stmt->execute();
+
+      $link = null;
+      return $stmt->fetchObject('Result');
    }
 
    public function insertNewResult(Result $result)

@@ -17,7 +17,7 @@ class ResultController
          $resultId = filter_input(INPUT_GET, 'res');
          if (isset($resultId)) {
 
-            $detailReceipt = $this->resultDaoImpl->fetchDetailReceipt($resultId);
+            $detailResult = $this->resultDaoImpl->fetchDetailResult($resultId);
 
             include_once "./views/result-detail-view.php";
          } else {

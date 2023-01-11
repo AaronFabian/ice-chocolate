@@ -72,7 +72,7 @@
          </tr>
          <tr>
             <td>
-               <div class="serving">Per <span class="highlighted">180.0g</span> Serving Size</div>
+               <div class="serving">Number <span class="highlighted"><?= $detailResult->getTableNumber(); ?></span> ***</div>
             </td>
          </tr>
          <tr style="height: 7px">
@@ -80,62 +80,69 @@
          </tr>
          <tr>
             <td style="font-size: 7pt">
-               <div class="line">Amount Per Serving</div>
+               <div class="line">Date</div>
             </td>
          </tr>
          <tr>
             <td>
                <div class="line">
-                  <div class="label">Calories <div class="weight">230</div>
+                  <div class="label"><?= $detailResult->getClientInAt(); ?><div class="weight"> as Time In</div>
                   </div>
-                  <div style="padding-top: 1px; float: right;" class="labellight">Calories from Fat <div class="weight">56</div>
+                  <div class="label"><?= $detailResult->getClientOutAt(); ?><div class="weight"> as Time Out</div>
                   </div>
+                  <!-- <div style="padding-top: 1px; float: right;" class="labellight">Calories from Fat <div class="weight">56</div>
+                  </div> -->
                </div>
             </td>
          </tr>
          <tr>
             <td>
                <div class="line">
-                  <div class="dvlabel">% Daily Value<sup>*</sup></div>
+                  <div class="dvlabel">Located<sup>*</sup></div>
                </div>
             </td>
          </tr>
+
+         <?php $floor = $detailResult->getTableNumber() . ""; ?>
          <tr>
-            <td>
+            <td class="indent">
                <div class="line">
-                  <div class="label">Total Fat <div class="weight">6.2g</div>
+                  <div class="labellight">Floor
                   </div>
-                  <div class="dv">10%</div>
+                  <div class="dv"><?= $floor[0]; ?></div>
                </div>
             </td>
          </tr>
          <tr>
             <td class="indent">
                <div class="line">
-                  <div class="labellight">Saturated Fat <div class="weight">3.5g</div>
+                  <div class="labellight">Column
                   </div>
-                  <div class="dv">17%</div>
+                  <div class="dv"><?= $floor[1]; ?></div>
                </div>
             </td>
          </tr>
          <tr>
             <td class="indent">
                <div class="line">
-                  <div class="labellight"><i>Trans</i> Fat <div class="weight">0.0g</div>
+                  <div class="labellight">Row
                   </div>
+                  <div class="dv"><?= $floor[2]; ?></div>
                </div>
             </td>
          </tr>
+
          <tr>
             <td>
                <div class="line">
-                  <div class="label">Cholesterol <div class="weight">22mg</div>
+                  <div class="label">
+                     <div class="weight"></div>
                   </div>
-                  <div class="dv">7%</div>
+                  <div class="dv"></div>
                </div>
             </td>
          </tr>
-         <tr>
+         <!-- <tr>
             <td>
                <div class="line">
                   <div class="label">Sodium <div class="weight">618mg</div>
@@ -143,8 +150,8 @@
                   <div class="dv">26%</div>
                </div>
             </td>
-         </tr>
-         <tr>
+         </tr> -->
+         <!-- <tr>
             <td>
                <div class="line">
                   <div class="label">Total Carbohydrates <div class="weight">32.2g</div>
@@ -152,8 +159,8 @@
                   <div class="dv">11%</div>
                </div>
             </td>
-         </tr>
-         <tr>
+         </tr> -->
+         <!-- <tr>
             <td class="indent">
                <div class="line">
                   <div class="labellight">Dietary Fiber <div class="weight">5.2g</div>
@@ -161,11 +168,12 @@
                   <div class="dv">21%</div>
                </div>
             </td>
-         </tr>
+         </tr> -->
          <tr>
             <td class="indent">
                <div class="line">
-                  <div class="labellight">Sugars <div class="weight">3.3g</div>
+                  <div class="labellight">
+                     <div class="weight"></div>
                   </div>
                </div>
             </td>
@@ -173,7 +181,7 @@
          <tr>
             <td>
                <div class="line">
-                  <div class="label">Protein <div class="weight">11.4g</div>
+                  <div class="label">Order List
                   </div>
                </div>
             </td>
@@ -184,36 +192,30 @@
          <tr>
             <td>
                <table cellspacing="0" cellpadding="0" border="0" class="vitamins">
-                  <tbody>
-                     <tr>
+                  <tbody class="order-list">
+                     <!-- <tr>
                         <td>Vitamin A &nbsp;&nbsp; 10%</td>
                         <td align="center">•</td>
                         <td align="right">Calcium &nbsp;&nbsp; 19%</td>
-                     </tr>
-                     <tr>
-                        <td>Vitamin B &nbsp;&nbsp; 22%</td>
-                        <td align="center">•</td>
-                        <td align="right">Iron &nbsp;&nbsp; 13%</td>
-                     </tr>
-                     <tr>
-                        <td>Vitamin C &nbsp;&nbsp; 16%</td>
-                        <td align="center">•</td>
-                        <td align="right">Potassium &nbsp;&nbsp; 7%</td>
-                     </tr>
-                     <tr>
-                        <td>Vitamin D &nbsp;&nbsp; 5%</td>
-                        <td align="center">•</td>
-                        <td align="right">Folate &nbsp;&nbsp; 40%</td>
-                     </tr>
+                     </tr> -->
                   </tbody>
                </table>
             </td>
          </tr>
          <tr>
+            <td class="indent">
+               <div class="line">
+                  <div class="labellight">Total Value as
+                  </div>
+                  <div class="dv"><?= $detailResult->getTotalPrice(); ?> 円</div>
+               </div>
+            </td>
+         </tr>
+         <tr>
             <td>
                <div class="line">
-                  <div class="labellight">* Based on a regular <a href="#">2000 calorie diet</a>
-                     <br><br><i>Nutritional details are an estimate and should only be used as a guide for approximation.</i>
+                  <div class="labellight"><a href="https://flappybird-aaron-fabian.netlify.app/">https://flappybird-aaron-fabian.netlify.app/</a>
+                     <br><br><i>Thankyou for your visits !</i>
                   </div>
                </div>
             </td>
@@ -221,3 +223,23 @@
       </tbody>
    </table>
 </div>
+<script>
+   const loadJSON = <?= $detailResult->getAllFood(); ?>;
+</script>
+<script>
+   const initData = function() {
+      const orderList = document.querySelector('.order-list');
+      const htmlHelper = (food) => {
+         return food.map(f => `<tr>
+                                 <td>${f.foodName} &nbsp;&nbsp;</td>
+                                 <td align="center">•</td>
+                                 <td align="right">${f.price / f.quantityOut}&nbsp;&nbsp;x&nbsp;&nbsp; ${f.quantityOut} &nbsp;&nbsp; = &nbsp;&nbsp; ${f.price}</td>
+                              </tr>`).join(' ');
+      }
+
+      orderList.insertAdjacentHTML('beforeend', htmlHelper(loadJSON));
+      console.log(loadJSON);
+   };
+
+   initData();
+</script>
