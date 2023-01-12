@@ -90,17 +90,15 @@ class Chat implements MessageComponentInterface
             case 'orderfood':
                $tableController = new TableController();
                $status = $tableController->postFood($data, $from->resourceId);
-               if ($status)
-                  Broadcast::tellStaff($this->printer, $data);
-               else
-                  echo "orderfood fail :( <on post>";
+               if ($status) Broadcast::tellStaff($this->printer, $data);
+               else echo "orderfood fail :( <on post>";
                break;
             case 'stafforderfood':
                $tableController = new TableController();
                $status = $tableController->staffPostFood($data, $from->resourceId);
                if ($status) {
                   Broadcast::tellStaff($this->printer, $data);
-                  Broadcast::isOk($from);
+                  Broadcast::isOk($from, 'success');
                } else {
                   Broadcast::errorPersonalCast($from, 'err-number');
                   echo "orderfood fail :( <on post>\n";
@@ -114,13 +112,21 @@ class Chat implements MessageComponentInterface
          switch ($category) {
             case 'opentable':
                $tableController = new TableController();
-               $status = $tableController->updateOpenTable($data, $from->resourceId);
+               $status = $tableController->updateOpenTable($data);
                if ($status) {
                   Broadcast::castTo($this->table, $status);
-                  Broadcast::isTableOk($from);
-               } else {
+                  Broadcast::isOk($from, 'tableOk');
+               } else
                   Broadcast::errorTablePersonalCast($from, 'table not online');
-               }
+               break;
+            case 'checkout':
+               $tableController = new TableController();
+               $status = $tableController->checkout($data);
+               if ($status) {
+                  Broadcast::castToCheckout($this->table, $status);
+                  Broadcast::isOk($from, 'checkoutOk');
+               } else
+                  Broadcast::errorTablePersonalCast($from, 'table not online');
                break;
             default:
                echo "Route Err : Category <on update>\n";

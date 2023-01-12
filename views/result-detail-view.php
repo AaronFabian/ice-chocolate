@@ -68,7 +68,7 @@
    <table width="242" cellspacing="0" cellpadding="0">
       <tbody>
          <tr>
-            <td align="center" class="header">Nutrition Facts</td>
+            <td align="center" class="header">Food Manager</td>
          </tr>
          <tr>
             <td>
@@ -92,6 +92,16 @@
                   </div>
                   <!-- <div style="padding-top: 1px; float: right;" class="labellight">Calories from Fat <div class="weight">56</div>
                   </div> -->
+               </div>
+            </td>
+         </tr>
+         <tr>
+            <td>
+               <div class="line">
+                  <div class="label">
+                     <div class="weight"></div>
+                  </div>
+                  <div class="dv"></div>
                </div>
             </td>
          </tr>
@@ -205,7 +215,7 @@
          <tr>
             <td class="indent">
                <div class="line">
-                  <div class="labellight">Total Value as
+                  <div class="labellight"><strong>Total Value as</strong>
                   </div>
                   <div class="dv"><?= $detailResult->getTotalPrice(); ?> 円</div>
                </div>
@@ -234,7 +244,7 @@
                                  <td>${f.foodName} &nbsp;&nbsp;</td>
                                  <td align="center">•</td>
                                  <td align="right">${f.price / f.quantityOut}&nbsp;&nbsp;x&nbsp;&nbsp; ${f.quantityOut} &nbsp;&nbsp; = &nbsp;&nbsp; ${f.price}</td>
-                              </tr>`).join(' ');
+                              </tr>`).join('\n');
       }
 
       orderList.insertAdjacentHTML('beforeend', htmlHelper(loadJSON));

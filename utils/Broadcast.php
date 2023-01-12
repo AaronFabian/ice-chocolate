@@ -10,11 +10,8 @@ class Broadcast
    public static function broadcastTable($from, $tableArr, $msg)
    {
       $from->send(json_encode(['ok' => $msg]));
-      foreach ($tableArr as $table) {
-         if ($table !== $from) {
-            $table->send(['ok' => $msg]);
-         }
-      }
+      foreach ($tableArr as $table)
+         if ($table !== $from) $table->send(['ok' => $msg]);
    }
 
    public static function tellStaff($printerArr, $msg)
@@ -33,18 +30,18 @@ class Broadcast
       $tableArr[$msg]->send(json_encode(['table' => 'open confirmed']));
    }
 
-   public static function isOk($from)
+   public static function castToCheckout($tableArr, $msg)
    {
-      $from->send(json_encode(['success' => true]));
+      $tableArr[$msg]->send(json_encode(['checkout' => 'checkout confirmed']));
+   }
+
+   public static function isOk($from, $key)
+   {
+      $from->send(json_encode([$key => true]));
    }
 
    public static function errorTablePersonalCast($from)
    {
       $from->send(json_encode(['tableErr' => 'error']));
-   }
-
-   public static function isTableOk($from)
-   {
-      $from->send(json_encode(['tableOk' => 'table open success']));
    }
 }

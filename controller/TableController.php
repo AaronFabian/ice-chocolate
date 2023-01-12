@@ -120,7 +120,7 @@ class TableController
       }
    }
 
-   public function updateOpenTable(stdClass $data, $staffId)
+   public function updateOpenTable(stdClass $data)
    {
       $table = new Table();
       $table->setNumber($data->seat);
@@ -129,5 +129,10 @@ class TableController
 
       if ($isTableOnline) return $isTableOnline->getConnectionId();
       else return 0;
+   }
+
+   public function checkout(stdClass $data)
+   {
+      return $this->updateOpenTable($data);
    }
 }

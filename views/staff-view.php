@@ -556,6 +556,7 @@
          let currentFloorView = 1;
          let checked = null;
          let checkedElement = null;
+         let currentToDo = 'opentable';
 
          //////////////////////////////////
          const gotoNextPage = function() {
@@ -578,6 +579,7 @@
             inpFoodsQuantity.innerText = 1;
          };
 
+         ////////////////////////////////////////////////
          const handleConfirmationOrderedMenu = function() {
             inpList.innerHTML = '';
             for (const [food, [quantity]] of Object.entries(orderedMenu)) {
@@ -603,8 +605,15 @@
          }
 
          const handleOpenTable = function() {
-            btnOpenTable
+            currentToDo = 'opentable';
+            notifOpenTable.innerText = 'opening table';
+         };
+
+         const handlePaymentAndCheckout = function() {
+            currentToDo = 'checkout';
+            notifOpenTable.innerText = 'checkout table';
          }
+         ////////////////////////////////////////////////
 
          //////////////////////////////////
          ////////////////// event listener
@@ -739,6 +748,10 @@
                   unactiveMenu[1].classList.add('active-menu');
                   handleConfirm();
                   break;
+               case 'payment':
+                  unactiveMenu[2].classList.add('active-menu');
+                  handlePaymentAndCheckout();
+                  break;
                default:
                   unactiveMenu[0].classList.add('active-menu');
                   break;
@@ -749,7 +762,7 @@
             if (!inpTableToOpen.value) return;
 
             const readyToSendData = {
-               request: 'update-staff-opentable',
+               request: `update-staff-${currentToDo}`,
                data: {
                   seat: inpTableToOpen.value,
                }
@@ -878,13 +891,20 @@
                finalNotif.insertAdjacentHTML('beforeend', htmlHelper('danger', 'Error : Table not found !'));
             } else if (msg.tableErr) {
                notifOpenTable.innerText = msg.tableErr;
+            } else if (msg.checkoutOk) {
+               notifOpenTable.innerText = '';
+               inpTable.value = '';
+               inpTableToOpen.value = '';
+               inpSeatNumber.innerText = '-';
+               containerSlider.style.transform = 'translate(0)';
+               alert('table checkout confirmed');
             } else if (msg.tableOk) {
                notifOpenTable.innerText = '';
                inpTable.value = '';
                inpTableToOpen.value = '';
                inpSeatNumber.innerText = '-';
                containerSlider.style.transform = 'translate(0)';
-               alert(msg.tableOk);
+               alert('table opened');
             } else if (msg.success) {
                orderedMenu = {};
                inpSeatNumber.innerText = '-';

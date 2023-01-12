@@ -223,21 +223,9 @@
                      </p>
                   <?php endif ?>
                <?php endforeach; ?>
-               <!-- <p class="py-2 pl-2 mb-1 font-medium duration-200 rounded-sm cursor-pointer shadow-deco category-item unselected-category">
-                  WESTERN FOOD
-               </p> -->
             </div>
          </aside>
          <div class="h-fit max-w-md bg-[rgba(255,255,255,0.1)] w-[67%] rounded-sm pl-4 pt-4 pr-2 pb-4 flex flex-wrap gap-2 justify-start drop-shadow-2xl" id="containerFoodList">
-            <!-- <div class="w-[23%] min-h-[8rem] bg-white rounded-lg">
-               <img src="src/img/Mashed-Potatoes-thumb.png" alt="Mashed Potatoes" class="food-img" />
-               <h3 class="text-[10px] text-center h-10 pt-2">
-                  Mashed Potatoes
-               </h3>
-               <button type="button" data-food="Mashed Potatoes" class="block px-4 py-1 mx-auto mt-4 text-xs text-white rounded-lg btnAdd bg-main button-add">
-                  Add
-               </button>
-            </div> -->
 
          </div>
       </div>
@@ -275,8 +263,8 @@
       </video> -->
       <div class="absolute top-0 left-0 w-full h-full bg-[rgba(0,0,0,0.6)] flex flex-col justify-center items-center welcome-screen">
          <div class="animate-pulse">
-            <h4 class="font-bold text-white text-8xl">Welcome</h4>
-            <p class="text-2xl text-center text-white">
+            <h4 class="font-bold text-center text-white text-8xl welcome-client">Welcome</h4>
+            <p class="text-2xl text-center text-white mini-notif">
                press anywhere to start order
             </p>
          </div>
@@ -290,45 +278,8 @@
    <div class="flex h-screen ml-auto w-96">
       <div class="w-[83%] duration-500 bg-white h-full confirm-order">
          <div class="flex flex-wrap gap-2 p-2 mt-28 container-food-confirm h-[580px] overflow-y-auto">
-            <!-- <div
-                     class="relative w-[23%] h-[14rem] bg-gray rounded-lg item-order"
-                     data-key="Garlic Dill New Potatoes"
-                  >
-                     <img
-                        src="src/img/Menu_Nav-Image-Thumb_Side_GarlicDill.png"
-                        alt="garlic"
-                     />
-                     <h3 class="text-[10px] text-center h-10 pt-2 text-white">
-                        Garlic Dill New Potatoes
-                     </h3>
-                     <button
-                        type="button"
-                        data-command="add"
-                        class="block px-4 py-1 mx-auto mt-4 text-xs font-extrabold text-white rounded-lg btnAdd bg-main button-add modal-btn"
-                     >
-                        +
-                     </button>
-                     <input
-                        type="text"
-                        value="1"
-                        disabled
-                        class="block w-6 mx-auto translate-y-2 food-quantity"
-                     />
-                     <button
-                        type="button"
-                        data-command="decrease"
-                        class="block px-4 py-1 mx-auto mt-4 text-xs font-extrabold text-white rounded-lg btnAdd bg-main button-add modal-btn"
-                     >
-                        -
-                     </button>
-                     <button
-                        type="button"
-                        data-command="delete"
-                        class="absolute top-0 right-0 w-4 h-4 text-xs font-bold text-white -translate-y-1/2 rounded-full translate-x- bg-danger modal-btn"
-                     >
-                        X
-                     </button>
-                  </div> -->
+
+
          </div>
          <div class="w-full h-full pt-2 mt-2 bg-gray_dark">
             <button class="block px-6 py-2 mx-auto mt-6 font-semibold text-white rounded-2xl bg-danger" id="btnSendData">
@@ -448,6 +399,8 @@
    const btnSendData = document.getElementById('btnSendData');
    const categoryMenu = document.getElementById('categoryMenu');
    const categoriesEl = document.querySelectorAll('.category-item');
+   const welcomeClient = document.querySelector('.welcome-client');
+   const miniNotif = document.querySelector('.mini-notif');
 
    let orderedMenu = {}; // { key => value }
 
@@ -517,14 +470,13 @@
       audio.changeCategory.play();
    });
 
-   // [foodname, imagesrc] !!
    containerFoodList.addEventListener('click', function(el) {
       const btnAdd = el.target.closest('.button-add');
       if (!btnAdd) return;
 
       const food = btnAdd.dataset.food;
 
-      if (food in orderedMenu) {
+      if (food in orderedMenu) { // [foodname, imagesrc]
          orderedMenu[food][0]++;
          const elementToIncrease = document.querySelector(
             `.item-order[data-key="${food}"]`
@@ -625,12 +577,12 @@
       });
 
    // TODO: delete soon in production
-   welcomeScreen.onclick = () => {
-      lockscreenContainer.classList.add('active-client');
-      setTimeout(() => {
-         lockscreenContainer.classList.add('hidden-it');
-      }, 500)
-   };
+   // welcomeScreen.onclick = () => {
+   //    lockscreenContainer.classList.add('active-client');
+   //    setTimeout(() => {
+   //       lockscreenContainer.classList.add('hidden-it');
+   //    }, 500) // 0.5s
+   // };
 
    conn.onmessage = function(e) {
       const msg = JSON.parse(e.data);
@@ -638,9 +590,15 @@
 
       if (msg.table) {
          lockscreenContainer.classList.add('active-client');
-         setTimeout(() => {
-            lockscreenContainer.classList.add('hidden-it');
-         }, 500)
+         setTimeout(() => lockscreenContainer.classList.add('hidden-it'), 500)
+      } else if (msg.checkout) {
+         lockscreenContainer.classList.remove('hidden-it');
+         setTimeout(() => lockscreenContainer.classList.remove('active-client'), 500);
+
+         welcomeClient.innerText = 'Thankyou For your visit !';
+         miniNotif.innerText = 'see you at next visit';
+
+         setTimeout(() => location.reload(), 15000); // 15s
       }
    };
 </script>
