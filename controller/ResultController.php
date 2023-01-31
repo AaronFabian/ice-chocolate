@@ -14,7 +14,7 @@ class ResultController
       $staffId = filter_input(INPUT_GET, 'staff');
       if (isset($staffId) and $staffId === $_SESSION['worker-id'] and $_SESSION['worker-role'] === 'manager') :
 
-         $resultId = filter_input(INPUT_GET, 'res');
+         $resultId = filter_input(INPUT_GET, 'res'); // result Id
          if (isset($resultId)) {
 
             $detailResult = $this->resultDaoImpl->fetchDetailResult($resultId);

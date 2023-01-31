@@ -8,6 +8,7 @@ class Result
    private $client_out_at;
    private $table_number;
    private $all_food; // will containt large string of ordered food (JSON)
+   private $timeline;
    private $dayname;
 
    private $year;
@@ -135,5 +136,15 @@ class Result
    public function setAllFood($all_food)
    {
       $this->all_food = $all_food;
+   }
+
+   public function getTimeline()
+   {
+      return $this->timeline;
+   }
+
+   public function setTimeline($timeline)
+   {
+      $this->timeline = $timeline;
    }
 }

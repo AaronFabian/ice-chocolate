@@ -32,8 +32,9 @@ class TableController
    public function disconnectTable($id)
    {
       $containerData = [];
-      $summaryReceipt = $this->documentDaoImpl->fetchSummary($id);
       $resultStatus = false;
+      $summaryReceipt = $this->documentDaoImpl->fetchSummary($id);
+
       if ($summaryReceipt) {
          foreach ($summaryReceipt as $i => $s) {
             if ($i === 0) {
@@ -41,7 +42,7 @@ class TableController
                $containerData['number'] = $s->getTable()->getNumber();
             }
 
-            $containerData['foodCollection'][] = [
+            $containerData['foodCollection'][] = [ // will become JSON
                'date' => $s->getDateCreated(),
                'foodName' => $s->getFoodName(),
                'quantityOut' => $s->getQuantityOut(),
@@ -53,13 +54,24 @@ class TableController
             $containerData['sumAllPrice'] += $s->getTotalPrice();
          }
 
+         $summaryTimeline = $this->documentDaoImpl->fetchSummaryTimeline($id);
+         foreach ($summaryTimeline as $t) {
+            $containerData['timeline'][] = [
+               'timeOrder' => $t->getDateCreated(),
+               'foodName' => $t->getFoodName(),
+               'quantities' => $t->getQuantities()
+            ];
+         }
+
          $newResult = new Result();
          $newResult->setidResult(uniqid());
          $newResult->setTotalPrice($containerData['sumAllPrice']);
          $newResult->setClientInAt($containerData['clientInAt']);
          $newResult->setTableNumber($containerData['number']);
          $newResult->setAllFood(json_encode($containerData['foodCollection']));
-         $resultStatus = $this->resultDaoImpl->insertNewResult($newResult);
+         $newResult->setTimeline(json_encode($containerData['timeline']));
+
+         $resultStatus = $this->resultDaoImpl->insertNewResult($newResult); // true
       }
 
       $deleteDocument = $this->documentDaoImpl->deleteDocument($id);
@@ -88,12 +100,10 @@ class TableController
          $newDocument->setQuantities($quantity);
          $insertStatus = $this->documentDaoImpl->insertNewDocument($newDocument);
 
-         if ($insertStatus) {
-            $status = 1;
-            $counter++;
-         } else {
-            break;
-         }
+         if (!$insertStatus) break;
+
+         $status = 1;
+         $counter++;
       }
 
       // logs
@@ -114,10 +124,10 @@ class TableController
       if ($isTable) {
          $tableId = $isTable->getConnectionId();
          return $this->postFood($data, $tableId);
-      } else {
-         echo "fail to insert document. table not found !\n";
-         return 0;
       }
+
+      echo "fail to insert document. table not found !\n";
+      return 0;
    }
 
    public function updateOpenTable(stdClass $data)

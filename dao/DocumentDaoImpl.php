@@ -2,6 +2,28 @@
 
 class DocumentDaoImpl
 {
+   /* 
+      data structure for fetch summary (JSON)
+      example : 
+         SQL output -> 
+            date_created      | appear | quantity_out |    food_name    | total_price |    number      | client_in_at
+         2023-01-31 12:25:04      1           3          Apple pie(id)       450        208(table no)     sql_time     
+
+         formated output -> 
+            [0]=> 
+               array(5) {
+                  ["date"]=>
+                  string(19) "2023-01-31 12:37:59"
+                  ["foodName"]=>
+                  string(5) "Pizza"
+                  ["quantityOut"]=>
+                  float(3)
+                  ["appear"]=>
+                  int(1)
+                  ["price"]=>
+                  float(450)
+               }
+   */
    public function fetchSummary($id)
    {
       $link = PDOUtil::createConnection();
@@ -69,6 +91,20 @@ class DocumentDaoImpl
          var_dump($error->errorInfo);
          return $status;
       }
+   }
+
+   public function fetchSummaryTimeline($id)
+   {
+      $link = PDOUtil::createConnection();
+
+      $query = 'SELECT date_created, food_name, quantities FROM japan_restaurant.document WHERE table_connection_id = ?';
+      $stmt = $link->prepare($query);
+      $stmt->bindParam(1, $id);
+      $stmt->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Document');
+      $stmt->execute();
+
+      $link = null;
+      return $stmt->fetchAll();
    }
 
    public static function printDocument($id, $data)

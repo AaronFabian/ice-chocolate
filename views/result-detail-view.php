@@ -62,6 +62,21 @@
       border: 1px dotted grey;
       padding: 2px;
    }
+
+   .chart-container {
+      margin: auto;
+      width: 80%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-evenly;
+      align-items: center;
+      gap: 50px;
+
+   }
+
+   .chart-style {
+      width: 400px;
+   }
 </style>
 
 <div id="nutritionfacts" class="mx-auto mt-2">
@@ -233,23 +248,136 @@
       </tbody>
    </table>
 </div>
+<div class="chart-container">
+   <div class="chart-style">
+      <canvas id="myChart"></canvas>
+   </div>
+   <div class="chart-style">
+      <canvas id="timelineChart"></canvas>
+   </div>
+</div>
 <script>
    const loadJSON = <?= $detailResult->getAllFood(); ?>;
+   const loadTimeline = <?= $detailResult->getTimeline(); ?>;
 </script>
 <script>
    const initData = function() {
       const orderList = document.querySelector('.order-list');
-      const htmlHelper = (food) => {
-         return food.map(f => `<tr>
-                                 <td>${f.foodName} &nbsp;&nbsp;</td>
-                                 <td align="center">•</td>
-                                 <td align="right">${f.price / f.quantityOut}&nbsp;&nbsp;x&nbsp;&nbsp; ${f.quantityOut} &nbsp;&nbsp; = &nbsp;&nbsp; ${f.price}</td>
-                              </tr>`).join('\n');
-      }
+      const htmlHelper = (food) => food.map(f => `<tr>
+                                                   <td>${f.foodName} &nbsp;&nbsp;</td>
+                                                   <td align="center">•</td>
+                                                   <td align="right">${f.price / f.quantityOut}&nbsp;&nbsp;x&nbsp;&nbsp; ${f.quantityOut} &nbsp;&nbsp; = &nbsp;&nbsp; ${f.price}</td>
+                                                </tr>`).join('\n');
+
 
       orderList.insertAdjacentHTML('beforeend', htmlHelper(loadJSON));
       console.log(loadJSON);
+      console.log(loadTimeline);
    };
 
    initData();
+</script>
+<script>
+   const myChart = document.getElementById('myChart');
+   const timelineChart = document.getElementById('timelineChart');
+
+   const chartData = {
+      type: 'bar',
+      data: {
+         labels: loadJSON.map((data => data.foodName)),
+         datasets: [{
+            label: 'Quantities',
+            data: loadJSON.map(data => data.quantityOut),
+            borderWidth: 1
+         }]
+      },
+      options: {
+         scales: {
+            y: {
+               beginAtZero: true
+            }
+         }
+      }
+   };
+   let res = 0;
+   const footer = function() {
+
+      if (res > loadTimeline.length - 1) res = 0;
+      let string = `${loadTimeline[res].timeOrder}`;
+      res++;
+
+      return 'Time: ' + string;
+   }
+   const colotPallete = ['#95a8f4', '#9fffd1', '#ece98b', '#d297d7', '#fe94bd', '#b3d2f8', '#cdb790']
+   const timelineData = {
+      type: 'scatter',
+      data: {
+         labels: [],
+         datasets: [{
+            type: 'bar',
+            label: 'Amount',
+            data: [],
+            borderColor: 'rgb(255, 99, 132)',
+            backgroundColor: 'rgba(255, 99, 132, 0.2)'
+         }, {
+            type: 'line',
+            label: 'Time',
+            data: [],
+            fill: false,
+            borderColor: 'rgb(54, 162, 235)'
+         }]
+      },
+      options: {
+         scales: {
+            y: {
+               beginAtZero: true
+            }
+         },
+         plugins: {
+            tooltip: {
+               callbacks: {
+                  footer: footer
+               }
+            }
+         }
+      }
+   };
+
+   // {
+   //          type: 'bar',
+   //          label: 'Bar Dataset',
+   //          data: [10, 20, 30, 40],
+   //          borderColor: 'rgb(255, 99, 132)',
+   //          backgroundColor: 'rgba(255, 99, 132, 0.2)'
+   //       }, {
+   //          type: 'line',
+   //          label: 'Timeline',
+   //          data: [50, 50, 50, 50],
+   //          fill: false,
+   //          borderColor: 'rgb(54, 162, 235)'
+   //       }
+
+   // labels -> display time
+   // Quantities -> Food quantities
+   // tooltip -> food name
+   // 
+   for (let i = 0; i < loadTimeline.length; i++) {
+      const timeline = loadTimeline[i];
+
+      const timeOrder = timeline.timeOrder;
+      const quantities = timeline.quantities;
+      const foodName = timeline.foodName;
+
+      timelineData.data.labels.push(foodName);
+      timelineData.data.datasets[0].data.push(quantities);
+      timelineData.data.datasets[1].data.push(quantities);
+
+
+      console.log(timeline);
+   }
+
+
+
+   const chart = new Chart(myChart, chartData);
+   const timeline = new Chart(timelineChart, timelineData);
 </script>

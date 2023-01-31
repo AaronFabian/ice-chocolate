@@ -34,7 +34,7 @@ class ResultDaoImpl
    {
       $link = PDOUtil::createConnection();
 
-      $query = "INSERT INTO japan_restaurant.result (id_result, total_price, client_in_at, table_number, all_food) VALUES (?,?,?,?,?);";
+      $query = "INSERT INTO japan_restaurant.result (id_result, total_price, client_in_at, table_number, all_food, timeline) VALUES (?,?,?,?,?,?);";
 
       $stmt = $link->prepare($query);
       $stmt->bindValue(1, $result->getIdResult());
@@ -42,6 +42,7 @@ class ResultDaoImpl
       $stmt->bindValue(3, $result->getClientInAt());
       $stmt->bindValue(4, $result->getTableNumber());
       $stmt->bindValue(5, $result->getAllFood());
+      $stmt->bindValue(6, $result->getTimeline());
 
       try {
          $link->beginTransaction();

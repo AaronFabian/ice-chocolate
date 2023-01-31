@@ -659,9 +659,6 @@
                this.#tableBody.insertAdjacentHTML('beforeend', markup);
             }
          }
-
-         // the default params got from php
-
          class AjaxEvent {
             constructor() {
                categoriesContainer.addEventListener('click', this.getFood.bind(this));

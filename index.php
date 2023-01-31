@@ -46,6 +46,9 @@ if (!$menu) $menu = '';
    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;800&display=swap" rel="stylesheet" />
    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css" />
    <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+   <?php if ($menu === 'result-view') : ?>
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+   <?php endif; ?>
 
    <?php if ($menu !== 'table-view') : ?>
       <script src="https://cdn.tailwindcss.com"></script>
